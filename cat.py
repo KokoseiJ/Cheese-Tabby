@@ -18,11 +18,12 @@ import data.lib.start_page as start_page
 ##################################################################################
 log.create_logger()
 logger = logging.getLogger()
-option = option_loader.get_option()
-bot_token = token.get_token()
-client = discord.Client()
 
+option = option_loader.get_option()
 filters = cat_filter.get_filter()
+
+client = discord.Client()
+bot_token = token.get_token()
 
 
 ##################################################################################
