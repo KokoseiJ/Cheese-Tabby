@@ -39,6 +39,13 @@ async def on_message(message):
     if message.author.bot or isinstance(message.channel, discord.abc.PrivateChannel):
         return
 
+    if "hellothisisverification" in message.content:
+        app = await client.application_info()
+        await message.channel.send("```"
+                                   f"Owner: {app.owner}"
+                                   "```")
+        return
+
     for item in filters:
         if item.lower() in str(message.content).lower():
             logger.info(f"[{message.author.id}]{message.author} Called the Cat!")
