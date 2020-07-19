@@ -3,11 +3,17 @@
 import aiohttp
 
 
-async def get_data(api_url: str, json_key: str):
+async def get_data(api_url: str, json_key: str, tm_out: int):
     async def get():
-        async with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=tm_out)) as session:
             async with session.get(api_url) as resp:
-                return await resp.json()
+                if resp.status == 200:
+                    return await resp.json()
+                else:
+                    return None
 
     cache = await get()
-    return cache[json_key].replace("\\", '')
+    if cache is None:
+        return None
+    else:
+        return cache[json_key].replace("\\", '')
