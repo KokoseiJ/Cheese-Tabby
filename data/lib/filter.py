@@ -7,6 +7,7 @@ logger = logging.getLogger()
 
 
 def load_filter(file_name):
+    logger.info("-" * 50)
     logger.info(f"Loading filter from {file_name}")
     if file_name.split(".")[-1] == "txt":
         with open(f"./data/filter/{file_name}", "r", encoding="utf-8") as filter_file:
