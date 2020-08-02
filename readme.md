@@ -1,7 +1,17 @@
 # Cat
-- discord bot
+- Discord Bot!
 - Meow? Meow!
 
+
+# Run Guide
+1. Create the bot
+2. Get the bot token
+3. copy option from option_example
+4. change option file name to "option.json"
+5. run the bot
+    - ex) cat.py or python3 cat.py
+6. invite the bot
+7. say "Meow"
 
 _ _ _ _ _
 ### Filter Creation Help

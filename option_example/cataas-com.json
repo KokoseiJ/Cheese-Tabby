@@ -1,0 +1,8 @@
+{
+    "api_url": "https://cataas.com/cat",
+    "is_json": false,
+    "json_key": "",
+    "timeout": 3,
+    "color": 16579836,
+    "save_guild_data": false
+}

@@ -35,8 +35,6 @@ filters = filter.get_filter()
 client = discord.Client()
 bot_token = token.get_token()
 
-cache = dict()
-
 
 ##################################################################################
 @client.event
@@ -49,25 +47,11 @@ async def on_ready():
 @client.event
 async def on_message(message):
     if message.author.bot or isinstance(message.channel, discord.abc.PrivateChannel):
-        try:
-            app = cache['app']
-        except KeyError:
-            app = await client.application_info()
+        app = await client.application_info()
 
         if message.author.id == app.owner.id:
             await message.author.send("Closing CatBOT...")
             await client.close()
-        return
-
-    if message.content.startswith("hellothisisverification"):
-        try:
-            app = cache['app']
-        except KeyError:
-            app = await client.application_info()
-
-        await message.channel.send("```"
-                                   f"BOT Owner: {app.owner}"
-                                   "```")
         return
 
     async def get_embed(title: str):
@@ -78,27 +62,32 @@ async def on_message(message):
             logger.info("Set timeout to default value [3] ")
             tm_out = 3
 
-        cat_url = await api.get_data(api_url=option['api_url'],
-                                     json_key=option['json_key'],
-                                     tm_out=tm_out)
+        if option['is_json'] is True:
+            cat_worker = await api.get_data(api_url=option['api_url'],
+                                            json_key=option['json_key'],
+                                            tm_out=tm_out)
 
-        if cat_url is None:
-            title = f"**WARNING! API SERVER ERROR!**"
-            cat_url = "https://http.cat/503"
+            if cat_worker[0] is False:
+                title = f"**WARNING! API SERVER ERROR!**"
+                img_url = f"https://http.cat/{cat_worker[1]}.jpg"
+            else:
+                img_url = cat_worker[1]
+        else:
+            img_url = option['api_url']
 
         embed = discord.Embed(title=f"{title}!",
                               color=option['color'])
 
-        embed.set_image(url=cat_url)
+        embed.set_image(url=img_url)
         return embed
 
     if client.user.mentioned_in(message) and str(client.user.id) in message.content:
-        try:
-            await message.channel.send(embed=await get_embed(title="It's Me!"))
-        except discord.errors.Forbidden:
-            await message.channel.send(f"```\n"
-                                       f"{client.user} need [Embed Links] Permission!\n"
-                                       f"```")
+        app = await client.application_info()
+
+        await message.channel.send("```"
+                                   f"Connected to {len(client.guilds)} guilds\n"
+                                   f"BOT Owner: {app.owner}"
+                                   "```")
         return
 
     for item in filters:

@@ -7,15 +7,12 @@ logger = logging.getLogger()
 
 
 def load_filter(file_name):
-    logger.info("-" * 50)
-    logger.info(f"Loading filter from {file_name}")
+    logger.info(f"Loading words from {file_name}")
     if file_name.split(".")[-1] == "txt":
         with open(f"./data/filter/{file_name}", "r", encoding="utf-8") as filter_file:
             cache = filter_file.read()
 
         cache = cache.replace(" ", "").split(",")
-        logger.info(f"item added: {cache}")
-
         return cache
     else:
         logger.warning("Filter file must be [*.txt] file")
