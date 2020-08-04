@@ -6,12 +6,10 @@
 # Run Guide
 1. Create the bot
 2. Get the bot token
-3. copy option from option_example
-4. change option file name to "option.json"
-5. run the bot
+3. run the bot
     - ex) cat.py or python3 cat.py
-6. invite the bot
-7. say "Meow"
+4. invite the bot
+5. say "Meow" or find cat!
 
 _ _ _ _ _
 ### Filter Creation Help
