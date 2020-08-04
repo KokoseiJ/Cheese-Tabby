@@ -1,8 +1,0 @@
-{
-    "api_url": "https://aws.random.cat/meow",
-    "is_json": true,
-    "json_key": "file",
-    "timeout": 3,
-    "color": 16579836,
-    "save_guild_data": false
-}

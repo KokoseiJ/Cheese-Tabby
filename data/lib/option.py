@@ -14,19 +14,9 @@ def get_option():
         option = json.load(open(option_file))
         logger.info("OK! - Option is loaded")
     except FileNotFoundError:
-        logger.info(f"FAIL - [{option_file}] not found, please copy from option_example")
+        logger.info(f"Fail to load CatBOT {option_file}...")
+        logger.info(" - PLZ Download again")
+        logger.info(" - Download: https://github.com/chick0/CatBOT")
         sys.exit(-1)
 
     return option
-
-
-def update_option(new_option):
-    logger.info(f"Updating Option...")
-    try:
-        with open(option_file, "w", encoding="utf-8") as option_f:
-            option_f.write(json.dumps(new_option))
-        logger.info("OK! - Option is Updated")
-        return True
-    except Exception as e:
-        logger.info(f"FAIL - {e}")
-        return False

@@ -19,7 +19,7 @@ except ModuleNotFoundError:
 try:
     from data.lib import api, filter, guild, log, option, start_page, token
 except ModuleNotFoundError:
-    print("Fail to load Cat library...")
+    print("Fail to load CatBOT library...")
     print(" - PLZ Download again")
     print(" - Download: https://github.com/chick0/CatBOT")
     sys.exit(-1)
@@ -40,7 +40,7 @@ bot_token = token.get_token()
 @client.event
 async def on_ready():
     await start_page.set_status(client, "idle", "watching", "Cat")
-    start_page.invite_me(bot=client, permission=52288)
+    start_page.invite_me(bot=client, permission=35840)
     guild.dump_guild(bot=client, save=option['save_guild_data'])
 
 
@@ -54,7 +54,7 @@ async def on_message(message):
             await client.close()
         return
 
-    async def get_embed(title: str):
+    async def get_embed():
         try:
             tm_out = int(option['timeout'])
         except ValueError:
@@ -62,24 +62,16 @@ async def on_message(message):
             logger.info("Set timeout to default value [3] ")
             tm_out = 3
 
-        if option['is_json'] is True:
-            cat_worker = await api.get_data(api_url=option['api_url'],
-                                            json_key=option['json_key'],
-                                            tm_out=tm_out)
+        cat_worker = await api.get_data(api_url=option['api_url'],
+                                        tm_out=tm_out)
 
-            if cat_worker[0] is False:
-                title = f"**WARNING! API SERVER ERROR!**"
-                img_url = f"https://http.cat/{cat_worker[1]}.jpg"
-            else:
-                img_url = cat_worker[1]
-        else:
-            img_url = option['api_url']
+        if cat_worker[0] is False:
+            error_img = await api.download(url=f"https://http.cat/{cat_worker[1]}.jpg",
+                                           tm_out=tm_out)
 
-        embed = discord.Embed(title=f"{title}!",
-                              color=option['color'])
-
-        embed.set_image(url=img_url)
-        return embed
+            return error_img, "**WARNING! API SERVER ERROR!**"
+        elif cat_worker[0] is True:
+            return cat_worker[1], None
 
     if client.user.mentioned_in(message) and str(client.user.id) in message.content:
         app = await client.application_info()
@@ -95,11 +87,17 @@ async def on_message(message):
             logger.info(f"[{message.author.id}]{message.author} Called the Cat!")
 
             try:
-                await message.channel.send(embed=await get_embed(title=item))
+                content = await get_embed()
+
+                if content[1] is not None:
+                    await message.channel.send(file=discord.File(content[0], 'some_cat.png'), content=content[1])
+                else:
+                    await message.channel.send(file=discord.File(content[0], 'some_cat.png'))
             except discord.errors.Forbidden:
                 await message.channel.send(f"```\n"
                                            f"{client.user} need [Embed Links] Permission!\n"
                                            f"```")
+
             return
     return
 

@@ -1,18 +1,41 @@
 # -*- coding: utf-8 -*-
 
+import io
 import aiohttp
 import logging
 
 logger = logging.getLogger()
 
 
-async def get_data(api_url: str, json_key: str, tm_out: int):
+async def download(url: str, tm_out: int):
+    try:
+        async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=tm_out)) as session:
+            async with session.get(url) as resp:
+                if resp.status == 200:
+                    if resp.headers['Content-Type'].startswith("image"):
+                        return io.BytesIO(await resp.read())
+                    else:
+                        raise ValueError("This is not Image!!")
+                else:
+                    logger.critical(f"Web Server returns {resp.status} not 200!!")
+                    return False, resp.status
+    except Exception as e:
+        logger.critical("Web Server Connect Error!!")
+        logger.info(f"Detail: {e}")
+        return None
+
+
+async def get_data(api_url: str, tm_out: int):
     async def get():
         try:
             async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=tm_out)) as session:
                 async with session.get(api_url) as resp:
                     if resp.status == 200:
-                        return True, await resp.json()
+                        if resp.headers['Content-Type'].startswith("image"):
+                            data = io.BytesIO(await resp.read())
+                            return True, data
+                        else:
+                            raise ValueError("This is not Image!!")
                     else:
                         logger.critical(f"API Server returns {resp.status} not 200!!")
                         return False, resp.status
@@ -22,7 +45,4 @@ async def get_data(api_url: str, json_key: str, tm_out: int):
             return False, 400
 
     cache = await get()
-    if cache[0] is False:
-        return cache
-    else:
-        return cache[0], cache[1][json_key].replace("\\", '')
+    return cache
