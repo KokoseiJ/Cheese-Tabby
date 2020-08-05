@@ -90,13 +90,16 @@ async def on_message(message):
                 content = await get_content()
 
                 if content[1] is not None:
-                    await message.channel.send(file=discord.File(content[0], 'some_cat.png'), content=content[1])
+                    try:
+                        await message.channel.send(file=discord.File(content[0], 'some_cat.png'), content=content[1])
+                    except TypeError:
+                        await message.channel.send(content=content[1])
                 else:
                     await message.channel.send(file=discord.File(content[0], 'some_cat.png'))
             except discord.errors.Forbidden:
                 await message.channel.send(f"```\n"
-                                           f"{client.user} need [Embed Links] Permission!\n"
-                                           f"```")
+                                           f"{client.user} need [Attach Files] Permission!\n"
+                                           f"```\n <@{message.guild.owner_id}>")
 
             return
     return
