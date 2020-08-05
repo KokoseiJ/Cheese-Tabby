@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import sys
 import logging
 import subprocess
 
@@ -15,15 +16,22 @@ except ModuleNotFoundError:
 
     import discord
 
-from data.lib import api, filter, guild, log, option, start_page, token
+from data.lib import guild, log, start_page, token
+from data.lib import api, filter, cat_cache
+
+try:
+    import option
+except ModuleNotFoundError:
+    print("CatBOT Option File is Missing!")
+    print(" - Download: https://github.com/chick0/CatBOT/blob/master/option.json")
+    sys.exit(-1)
 
 ##################################################################################
 log.create_logger()
 logger = logging.getLogger()
 
-option = option.get_option()
-
 filters = filter.get_filter()
+cat_cache.check_dir()
 
 client = discord.Client()
 bot_token = token.get_token()
@@ -49,22 +57,33 @@ async def on_message(message):
 
     async def get_content():
         try:
-            tm_out = int(option['timeout'])
+            tm_out = int(option.timeout)
         except ValueError:
             logger.critical("Warning! Timeout option is not integer")
             logger.info("Set timeout to default value [3] ")
             tm_out = 3
 
-        cat_worker = await api.get_data(api_url=option['api_url'],
+        cat_worker = await api.get_data(api_url=option.api_url,
                                         tm_out=tm_out)
 
         if cat_worker[0] is False:
-            error_img = await api.download(url=f"https://http.cat/{cat_worker[1]}.jpg",
-                                           tm_out=tm_out)
-
-            return error_img, "**WARNING! API SERVER ERROR!**"
+            if len(cat_cache.get_cache_list()) == 0:
+                return "**WARNING! API SERVER ERROR!**"
+            else:
+                return await cat_cache.get_cat_random()
         elif cat_worker[0] is True:
-            return cat_worker[1], None
+            if option.cache_limit > len(cat_cache.get_cache_list()):
+                logger.info("Adding Cat to cache...")
+                await cat_cache.save_cat(cat_worker[1])
+            else:
+                logger.info("Cache is full!")
+                if option.replace_on_limit is True:
+                    logger.info("Replace option is enabled!")
+                    logger.info("Adding Cat to cache...")
+                    await cat_cache.replace_cat(cat_worker[1])
+                pass
+
+            return cat_worker[1]
 
     if client.user.mentioned_in(message) and str(client.user.id) in message.content:
         app = await client.application_info()
@@ -82,16 +101,13 @@ async def on_message(message):
             try:
                 content = await get_content()
 
-                if content[1] is not None:
-                    try:
-                        await message.channel.send(file=discord.File(content[0], 'some_cat.png'), content=content[1])
-                    except TypeError:
-                        await message.channel.send(content=content[1])
+                if isinstance(content, str):
+                    await message.channel.send(content=content)
                 else:
-                    await message.channel.send(file=discord.File(content[0], 'some_cat.png'))
+                    await message.channel.send(file=discord.File(content, 'some_cat.png'))
             except discord.errors.Forbidden:
-                await message.channel.send(f"```\n"
-                                           f"{client.user} need [Attach Files] Permission!\n"
+                await message.channel.send("```\nHello?\n"
+                                           f"{client.user} need [Attach Files] Permission!!\n"
                                            f"```\n <@{message.guild.owner_id}>")
 
             return
