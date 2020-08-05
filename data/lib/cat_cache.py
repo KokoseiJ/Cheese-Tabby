@@ -32,8 +32,9 @@ async def save_cat(file):
 
 
 async def replace_cat(file):
-    old_cat = await get_cat_random(raw=True)
-    os.remove(os.path.join(cache_dir, old_cat))
+    caches = get_cache_list()
+    old_cat_id = await get_cat_random(raw=True)
+    os.remove(os.path.join(cache_dir, caches[old_cat_id]))
 
     return await save_cat(file)
 
