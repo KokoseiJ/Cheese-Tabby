@@ -19,12 +19,13 @@ def get_cache_list():
 
 async def save_cat(file):
     file_name = f"{uuid.uuid4()}"
-    logger.info(f"Saving Cat at '{cache_dir}' name as '{file_name}'")
+    logger.info(f"Try to Save Cat at '{cache_dir}' name as '{file_name}'")
 
     try:
         async with aiofiles.open(os.path.join(cache_dir, file_name), mode='wb') as worker:
             await worker.write(file.getbuffer())
-
+            
+        logging.info(f"Cat Saved! '{os.path.join(cache_dir, file_name)}")
         return True
     except Exception as e:
         logger.warning(f"FAIL - {e.__class__.__name__}: {e}")
@@ -32,9 +33,8 @@ async def save_cat(file):
 
 
 async def replace_cat(file):
-    caches = get_cache_list()
-    old_cat_id = await get_cat_random(raw=True)
-    os.remove(os.path.join(cache_dir, caches[old_cat_id]))
+    old_cat = await get_cat_random(raw=True)
+    os.remove(os.path.join(cache_dir, old_cat))
 
     return await save_cat(file)
 
@@ -44,7 +44,7 @@ async def get_cat_random(raw=False):
     cat_id = random.randint(0, len(caches) - 1)
 
     if raw is True:
-        return cat_id
+        return caches[cat_id]
     return get_cat_by_id(caches[cat_id])
 
 
