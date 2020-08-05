@@ -90,7 +90,8 @@ async def on_message(message):
 
         await message.channel.send("```"
                                    f"Connected to {len(client.guilds)} guilds\n"
-                                   f"BOT Owner: {app.owner}"
+                                   f"BOT Owner: {app.owner}\n\n"
+                                   f"Cached Cat: {len(cat_cache.get_cache_list())}"
                                    "```")
         return
 
