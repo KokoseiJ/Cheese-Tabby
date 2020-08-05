@@ -23,7 +23,7 @@ try:
     import option
 except ModuleNotFoundError:
     print("CatBOT Option File is Missing!")
-    print(" - Download: https://github.com/chick0/CatBOT/blob/master/option.json")
+    print(" - Download: https://github.com/chick0/CatBOT/blob/master/option.py")
     sys.exit(-1)
 
 ##################################################################################
