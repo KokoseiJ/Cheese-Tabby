@@ -1,5 +1,5 @@
 {
-    "api_url": "https://cataas.com/cat",
+    "api_url": "https://cataas.com/cat?width=500",
     "timeout": 3,
     "save_guild_data": false
 }
