@@ -5,7 +5,7 @@ api_url = "https://cataas.com/cat?width=300"
 timeout = 3
 
 # Cache Option
-cache_limit = 30
+cache_limit = 50
 replace_on_limit = True
 
 # Prefix is None
