@@ -54,7 +54,7 @@ async def on_message(message):
             await client.close()
         return
 
-    async def get_embed():
+    async def get_content():
         try:
             tm_out = int(option['timeout'])
         except ValueError:
@@ -87,7 +87,7 @@ async def on_message(message):
             logger.info(f"[{message.author.id}]{message.author} Called the Cat!")
 
             try:
-                content = await get_embed()
+                content = await get_content()
 
                 if content[1] is not None:
                     await message.channel.send(file=discord.File(content[0], 'some_cat.png'), content=content[1])
