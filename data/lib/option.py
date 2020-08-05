@@ -14,9 +14,8 @@ def get_option():
         option = json.load(open(option_file))
         logger.info("OK! - Option is loaded")
     except FileNotFoundError:
-        logger.info(f"Fail to load CatBOT {option_file}...")
-        logger.info(" - PLZ Download again")
-        logger.info(" - Download: https://github.com/chick0/CatBOT")
+        print("CatBOT Option File is Missing!")
+        logger.info(" - Download: https://github.com/chick0/CatBOT/blob/master/option.json")
         sys.exit(-1)
 
     return option

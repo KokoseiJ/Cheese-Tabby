@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import sys
 import logging
 import subprocess
 
@@ -16,13 +15,7 @@ except ModuleNotFoundError:
 
     import discord
 
-try:
-    from data.lib import api, filter, guild, log, option, start_page, token
-except ModuleNotFoundError:
-    print("Fail to load CatBOT library...")
-    print(" - PLZ Download again")
-    print(" - Download: https://github.com/chick0/CatBOT")
-    sys.exit(-1)
+from data.lib import api, filter, guild, log, option, start_page, token
 
 ##################################################################################
 log.create_logger()
@@ -41,7 +34,7 @@ bot_token = token.get_token()
 async def on_ready():
     await start_page.set_status(client, "idle", "watching", "Cat")
     start_page.invite_me(bot=client, permission=35840)
-    guild.dump_guild(bot=client, save=option['save_guild_data'])
+    guild.dump_guild(bot=client)
 
 
 @client.event
