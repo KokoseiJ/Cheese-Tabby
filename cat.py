@@ -143,7 +143,8 @@ async def on_message(message):
 
     for item in filters:
         if item.lower() in str(message.content).lower():
-            logger.info(f"[{message.author.id}]{message.author} Called the Cat!")
+            logger.info(f"[{message.author.id}]{message.author} Called the Cat using '{item}'")
+            logger.info(f"Original Text: {message.content}")
 
             try:
                 content = await get_content()
