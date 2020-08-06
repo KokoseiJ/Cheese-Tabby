@@ -9,9 +9,17 @@ try:
 except ModuleNotFoundError:
     print("===< Installing Module >===")
     try:
-        subprocess.run(['pip', 'install', 'discord'])
+        subprocess.run(['pip', 'install', '-r', 'requirements.txt'])
     except OSError:
-        subprocess.run(['pip3', 'install', 'discord'])
+        subprocess.run(['pip3', 'install', '-r', 'requirements.txt'])
+    except Exception as e:
+        print(f"Unexpected Error {e.__class__.__name__}!")
+        print("Try to user install...")
+
+        try:
+            subprocess.run(['pip', 'install', '-r', 'requirements.txt', '--user'])
+        except OSError:
+            subprocess.run(['pip3', 'install', '-r', 'requirements.txt', '--user'])
     print("===========================")
 
     import discord
@@ -34,7 +42,11 @@ filters = filter.get_filter()
 cat_cache.check_dir()
 
 client = discord.Client()
-bot_token = token.get_token()
+
+token_worker = token.Token(file_name="token.json",
+                           service="Discord")
+bot_token = token_worker.get_token()
+del token_worker
 
 
 ##################################################################################
@@ -47,12 +59,17 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    if message.author.bot or isinstance(message.channel, discord.abc.PrivateChannel):
+    if message.author.bot is True:
+        return
+
+    if isinstance(message.channel, discord.abc.PrivateChannel):
         app = await client.application_info()
 
         if message.author.id == app.owner.id:
             await message.author.send("Closing CatBOT...")
             await client.close()
+        else:
+            await message.author.send("https://http.cat/403.jpg")
         return
 
     async def get_content():
@@ -88,6 +105,30 @@ async def on_message(message):
 
             return cat_worker[1]
 
+    if message.content[0] == option.prefix:
+        if message.content.startswith(option.prefix + "help"):
+            with open("help_msg.txt", mode='r') as worker:
+                help_msg = worker.read()
+
+            help_msg = help_msg.replace("{{prefix}}", option.prefix)
+            await message.channel.send("```\n" + help_msg + "\n```")
+
+        if message.content.startswith(option.prefix + "purge_cache"):
+            app = await client.application_info()
+            if app.owner.id is message.author.id:
+                logger.info("Removing cat image from 'cat_cache'...")
+
+                cc = len(cat_cache.get_cache_list())
+                logger.info(f"'{cc}' detected")
+                if cc == 0:
+                    logger.info("'cat_cache' is already empty")
+                else:
+                    cat_cache.purge_cache()
+            else:
+                logger.info(f"[{message.author.id}]{message.author} try to use admin command!")
+                await message.channel.send(":cat:")
+            return
+
     if client.user.mentioned_in(message) and str(client.user.id) in message.content:
         app = await client.application_info()
 
@@ -95,7 +136,8 @@ async def on_message(message):
                                    f"Connected to {len(client.guilds)} guilds\n"
                                    f"BOT Owner: {app.owner}\n\n"
                                    f"Cached Cat: {len(cat_cache.get_cache_list())}\n"
-                                   f"Cache Limit: {option.cache_limit}"
+                                   f"Cache Limit: {option.cache_limit}\n\n"
+                                   f"Filter words: {len(filters)}\n"
                                    "```")
         return
 
@@ -126,7 +168,11 @@ try:
     client.run(bot_token)
 except discord.errors.LoginFailure:
     logger.critical("**Invalid token loaded!!**")
-    token.reset_token()
+
+    token_worker = token.Token(file_name="token.json",
+                               service="Discord")
+    bot_token = token_worker.reset_token()
+    del bot_token
 except Exception as e:
     logger.critical("=" * 30)
     logger.critical("<< Bot is dead >>")

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import io
-import aiohttp
 import logging
+
+import aiohttp
 
 logger = logging.getLogger()
 

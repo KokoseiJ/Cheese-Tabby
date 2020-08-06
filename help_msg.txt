@@ -1,0 +1,4 @@
+{{prefix}}help        - show this message
+{{prefix}}purge_cache - (admin only) purge cat cache
+
+Hint. Mention the bot

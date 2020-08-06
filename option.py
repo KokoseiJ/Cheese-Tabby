@@ -8,4 +8,5 @@ timeout = 3
 cache_limit = 50
 replace_on_limit = True
 
-# Prefix is None
+# Bot Option
+prefix = "="

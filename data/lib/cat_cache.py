@@ -57,6 +57,17 @@ def get_cat_by_id(cache_id):
         return False
 
 
+def purge_cache():
+    caches = get_cache_list()
+
+    for cache in caches:
+        try:
+            os.remove(os.path.join(cache_dir, cache))
+            logger.info(f"'{cache}' removed")
+        except Exception as e:
+            logger.info(f"Fail to remove '{cache}' cause '{e.__class__.__name__}: {e}'")
+
+
 def check_dir():
     logger.info(f"Testing '{cache_dir}' is online...")
     if os.path.isdir(os.path.join(cache_dir)):
