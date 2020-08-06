@@ -115,7 +115,7 @@ async def on_message(message):
 
         if message.content.startswith(option.prefix + "purge_cache"):
             app = await client.application_info()
-            if app.owner.id is message.author.id:
+            if app.owner.id == message.author.id:
                 logger.info("Removing cat image from 'cat_cache'...")
 
                 cc = len(cat_cache.get_cache_list())
