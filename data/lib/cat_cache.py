@@ -17,6 +17,25 @@ def get_cache_list():
     return os.listdir(cache_dir)
 
 
+def get_size_by_id(cache_id):
+    return os.path.getsize(os.path.join(cache_dir, cache_id))
+
+
+def get_cache_size():
+    items = get_cache_list()
+    result = 0
+
+    logger.info("Try to get size in 'cat_cache'")
+    for item in items:
+        try:
+            result = result + get_size_by_id(item)
+        except Exception as e:
+            logger.warning(f"FAIL - {e.__class__.__name__}: {e}")
+
+    logger.info(f"Cache Size: {result}")
+    return result
+
+
 async def save_cat(file):
     file_name = f"{uuid.uuid4()}"
     logger.info(f"Try to Save Cat at '{cache_dir}' name as '{file_name}'")

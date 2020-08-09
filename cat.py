@@ -105,7 +105,7 @@ async def on_message(message):
 
             return cat_worker[1]
 
-    if message.content[0] == option.prefix:
+    if message.content.startswith(option.prefix):
         if message.content.startswith(option.prefix + "help"):
             with open("help_msg.txt", mode='r') as worker:
                 help_msg = worker.read()
@@ -120,6 +120,8 @@ async def on_message(message):
 
                 cc = len(cat_cache.get_cache_list())
                 logger.info(f"'{cc}' detected")
+                await message.channel.send(f"```\n{cc} => 0\n```")
+
                 if cc == 0:
                     logger.info("'cat_cache' is already empty")
                 else:
@@ -136,7 +138,8 @@ async def on_message(message):
                                    f"Connected to {len(client.guilds)} guilds\n"
                                    f"BOT Owner: {app.owner}\n\n"
                                    f"Cached Cat: {len(cat_cache.get_cache_list())}\n"
-                                   f"Cache Limit: {option.cache_limit}\n\n"
+                                   f"Cache Limit: {option.cache_limit}\n"
+                                   f"Cache Size: {cat_cache.get_cache_size()} B\n\n"
                                    f"Filter words: {len(filters)}\n"
                                    "```")
         return
