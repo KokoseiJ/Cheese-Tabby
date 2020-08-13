@@ -1,4 +1,4 @@
 {{prefix}}help        - show this message
-{{prefix}}purge_cache - (admin only) purge cat cache
+{{prefix}}invite      - Send invite link
 
-Hint. Mention the bot
+Tip. Mention the bot

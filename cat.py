@@ -25,7 +25,7 @@ except ModuleNotFoundError:
     import discord
 
 from data.lib import guild, log, start_page, token
-from data.lib import api, filter, cat_cache
+from data.lib import api, cat_cache, filter, invite
 
 try:
     import option
@@ -53,7 +53,7 @@ del token_worker
 @client.event
 async def on_ready():
     await start_page.set_status(client, "idle", "watching", "Cat")
-    start_page.invite_me(bot=client, permission=35840)
+    start_page.bot_info(bot=client)
     guild.dump_guild(bot=client)
 
 
@@ -112,6 +112,19 @@ async def on_message(message):
 
             help_msg = help_msg.replace("{{prefix}}", option.prefix)
             await message.channel.send("```\n" + help_msg + "\n```")
+            return
+
+        if message.content.startswith(option.prefix + "invite"):
+            await message.channel.send("```\nCheck your Direct Message\n```")
+
+            embed = discord.Embed(title="Invite Me!", color=16579836,
+                                  description="Please Click me!",
+                                  url=invite.get_link(client))
+            try:
+                await message.author.send(embed=embed)
+            except discord.errors.Forbidden:
+                pass
+            return
 
         if message.content.startswith(option.prefix + "purge_cache"):
             app = await client.application_info()
@@ -128,7 +141,7 @@ async def on_message(message):
                     cat_cache.purge_cache()
             else:
                 logger.info(f"[{message.author.id}]{message.author} try to use admin command!")
-                await message.channel.send(":cat:")
+                await message.channel.send(":cat: ?")
             return
 
     if client.user.mentioned_in(message) and str(client.user.id) in message.content:
@@ -137,11 +150,15 @@ async def on_message(message):
         await message.channel.send("```"
                                    f"Connected to {len(client.guilds)} guilds\n"
                                    f"BOT Owner: {app.owner}\n\n"
-                                   f"Cached Cat: {len(cat_cache.get_cache_list())}\n"
-                                   f"Cache Limit: {option.cache_limit}\n"
-                                   f"Cache Size: {cat_cache.get_cache_size()} B\n\n"
                                    f"Filter words: {len(filters)}\n"
                                    "```")
+        if message.author.id == app.owner.id:
+            await message.channel.send("```"
+                                       f"Cached Cat: {len(cat_cache.get_cache_list())}\n"
+                                       f"Cache Limit: {option.cache_limit}\n"
+                                       f"Cache Size: {cat_cache.get_cache_size()} B\n"
+                                       "```")
+
         return
 
     for item in filters:

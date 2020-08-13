@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import logging
+
 import discord
 
+from data.lib import invite
 
 logger = logging.getLogger()
 
 
-def __get_status(option):
+def get_status(option):
     if option == "idle":
         return discord.Status.idle
     elif option == "dnd":
@@ -20,7 +22,7 @@ def __get_status(option):
         return discord.Status.online
 
 
-def __get_type(option):
+def get_type(option):
     if option == "playing":
         return discord.ActivityType.playing
     elif option == "streaming":
@@ -34,16 +36,15 @@ def __get_type(option):
 
 
 async def set_status(bot, status, activity, name):
-    await bot.change_presence(status=__get_status(status),
-                              activity=discord.Activity(type=__get_type(activity),
+    await bot.change_presence(status=get_status(status),
+                              activity=discord.Activity(type=get_type(activity),
                                                         name=name)
                               )
 
 
-def invite_me(bot, permission):
+def bot_info(bot):
     logger.info("-" * 50)
     logger.info(f"BOT Login -> {bot.user}")
     logger.info("-" * 50)
-    logger.info(f"invite bot: https://discordapp.com/api/oauth2/authorize?client_id={bot.user.id}"
-                f"&permissions={permission}&scope=bot")
+    logger.info(f"invite bot: {invite.get_link(bot)}")
     logger.info("-" * 50)
