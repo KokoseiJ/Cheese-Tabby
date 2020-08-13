@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import json
 import logging
 
 logger = logging.getLogger()
@@ -33,4 +34,5 @@ def get_filter():
     logger.info("<< filter information >>")
     logger.info(f" - {len(filters)} words")
     logger.info(f" - filters: {filters}")
-    return filters
+
+    json.dump(filters, open("data/cache__filters.json", mode="w", encoding="utf-8"))

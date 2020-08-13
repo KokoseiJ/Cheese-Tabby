@@ -14,6 +14,7 @@ cache_dir = "cat_cache/"
 
 
 def get_cache_list():
+    check_dir()
     return os.listdir(cache_dir)
 
 
@@ -37,6 +38,7 @@ def get_cache_size():
 
 
 async def save_cat(file):
+    check_dir()
     file_name = f"{uuid.uuid4()}"
     logger.info(f"Try to Save Cat at '{cache_dir}' name as '{file_name}'")
 

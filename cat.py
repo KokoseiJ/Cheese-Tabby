@@ -24,8 +24,12 @@ except ModuleNotFoundError:
 
     import discord
 
-from data.lib import guild, log, start_page, token
-from data.lib import api, cat_cache, filter, invite
+from data.lib import guild, log, start_page, token, cache
+from data.lib import filter, invite
+
+from data.static_command import direct, filter_work, mention
+
+from data.command import help, invite, purge_cache
 
 try:
     import option
@@ -38,8 +42,7 @@ except ModuleNotFoundError:
 log.create_logger()
 logger = logging.getLogger()
 
-filters = filter.get_filter()
-cat_cache.check_dir()
+filter.get_filter()
 
 client = discord.Client()
 
@@ -59,126 +62,28 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    if message.author.bot is True:
+    if message.author.bot:
         return
 
     if isinstance(message.channel, discord.abc.PrivateChannel):
-        app = await client.application_info()
-
-        if message.author.id == app.owner.id:
-            await message.author.send("Closing CatBOT...")
-            await client.close()
-        else:
-            await message.author.send("https://http.cat/403.jpg")
+        await direct.main(message, client)
         return
-
-    async def get_content():
-        try:
-            tm_out = int(option.timeout)
-        except ValueError:
-            logger.critical("Warning! Timeout option is not integer")
-            logger.info("Set timeout to default value [3] ")
-            tm_out = 3
-
-        cat_worker = await api.get_data(api_url=option.api_url,
-                                        tm_out=tm_out)
-
-        if cat_worker[0] is False:
-            logging.info("Try to use Cat Cache...")
-            if len(cat_cache.get_cache_list()) == 0:
-                logging.warning("'cat_cache' is EMPTY!")
-                logging.warning("Send Error Message!")
-                return f"**WARNING! API SERVER ERROR!**\n - {cat_worker[1]}"
-            else:
-                return await cat_cache.get_cat_random()
-        elif cat_worker[0] is True:
-            if option.cache_limit > len(cat_cache.get_cache_list()):
-                logger.info("Adding Cat to 'cat_cache'...")
-                await cat_cache.save_cat(cat_worker[1])
-            else:
-                logger.info("Cache is full!")
-                if option.replace_on_limit is True:
-                    logger.info("Replace option is enabled!")
-                    logger.info("Adding Cat to 'cat_cache'...")
-                    await cat_cache.replace_cat(cat_worker[1])
-                pass
-
-            return cat_worker[1]
 
     if message.content.startswith(option.prefix):
         if message.content.startswith(option.prefix + "help"):
-            with open("help_msg.txt", mode='r') as worker:
-                help_msg = worker.read()
-
-            help_msg = help_msg.replace("{{prefix}}", option.prefix)
-            await message.channel.send("```\n" + help_msg + "\n```")
-            return
+            await help.main(message, client)
 
         if message.content.startswith(option.prefix + "invite"):
-            await message.channel.send("```\nCheck your Direct Message\n```")
-
-            embed = discord.Embed(title="Invite Me!", color=16579836,
-                                  description="Please Click me!",
-                                  url=invite.get_link(client))
-            try:
-                await message.author.send(embed=embed)
-            except discord.errors.Forbidden:
-                pass
-            return
+            await invite.main(message, client)
 
         if message.content.startswith(option.prefix + "purge_cache"):
-            app = await client.application_info()
-            if app.owner.id == message.author.id:
-                logger.info("Removing cat image from 'cat_cache'...")
-
-                cc = len(cat_cache.get_cache_list())
-                logger.info(f"'{cc}' detected")
-                await message.channel.send(f"```\n{cc} => 0\n```")
-
-                if cc == 0:
-                    logger.info("'cat_cache' is already empty")
-                else:
-                    cat_cache.purge_cache()
-            else:
-                logger.info(f"[{message.author.id}]{message.author} try to use admin command!")
-                await message.channel.send(":cat: ?")
-            return
+            await purge_cache.main(message, client)
 
     if client.user.mentioned_in(message) and str(client.user.id) in message.content:
-        app = await client.application_info()
-
-        await message.channel.send("```"
-                                   f"Connected to {len(client.guilds)} guilds\n"
-                                   f"BOT Owner: {app.owner}\n\n"
-                                   f"Filter words: {len(filters)}\n"
-                                   "```")
-        if message.author.id == app.owner.id:
-            await message.channel.send("```"
-                                       f"Cached Cat: {len(cat_cache.get_cache_list())}\n"
-                                       f"Cache Limit: {option.cache_limit}\n"
-                                       f"Cache Size: {cat_cache.get_cache_size()} B\n"
-                                       "```")
-
+        await mention.main(message, client)
         return
 
-    for item in filters:
-        if item.lower() in str(message.content).lower():
-            logger.info(f"[{message.author.id}]{message.author} Called the Cat using '{item}'")
-            logger.info(f"Original Text: {message.content}")
-
-            try:
-                content = await get_content()
-
-                if isinstance(content, str):
-                    await message.channel.send(content=content)
-                else:
-                    await message.channel.send(file=discord.File(content, 'some_cat.png'))
-            except discord.errors.Forbidden:
-                await message.channel.send("```\nHello?\n"
-                                           f"{client.user} need [Attach Files] Permission!!\n"
-                                           f"```\n <@{message.guild.owner_id}>")
-
-            return
+    await filter_work.main(message)
     return
 
 
@@ -199,3 +104,5 @@ except Exception as e:
     logger.critical("<< Bot is dead >>")
     logger.critical(e)
     logger.critical("=" * 30)
+
+cache.run()
