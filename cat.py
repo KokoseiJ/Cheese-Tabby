@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
+import os
 import sys
 import logging
+import importlib
 import subprocess
 
 try:
@@ -25,11 +27,7 @@ except ModuleNotFoundError:
     import discord
 
 from data.lib import guild, log, start_page, token, cache
-from data.lib import filter, invite
-
-from data.static_command import direct, filter_work, mention
-
-from data.command import help, invite, purge_cache
+from data.static_command import filter_work, mention
 
 try:
     import option
@@ -42,14 +40,31 @@ except ModuleNotFoundError:
 log.create_logger()
 logger = logging.getLogger()
 
-filter.get_filter()
-
 client = discord.Client()
 
 token_worker = token.Token(file_name="token.json",
                            service="Discord")
 bot_token = token_worker.get_token()
 del token_worker
+
+
+def cache_filter():
+    from data.lib import filter
+    filter.get_filter()
+
+
+cache_filter()
+
+
+##################################################################################
+modules = dict()
+
+command_files = os.listdir("data/command/")
+for module_file in command_files:
+    module = importlib.import_module(f"data.command.{module_file.split('.')[0]}")
+    modules[module_file.split('.')[0]] = module
+
+del command_files
 
 
 ##################################################################################
@@ -65,19 +80,11 @@ async def on_message(message):
     if message.author.bot:
         return
 
-    if isinstance(message.channel, discord.abc.PrivateChannel):
-        await direct.main(message, client)
-        return
-
     if message.content.startswith(option.prefix):
-        if message.content.startswith(option.prefix + "help"):
-            await help.main(message, client)
-
-        if message.content.startswith(option.prefix + "invite"):
-            await invite.main(message, client)
-
-        if message.content.startswith(option.prefix + "purge_cache"):
-            await purge_cache.main(message, client)
+        commands = list(modules.keys())
+        for command in commands:
+            if message.content.startswith(option.prefix + command):
+                await modules[command].main(message, client)
 
     if client.user.mentioned_in(message) and str(client.user.id) in message.content:
         await mention.main(message, client)
