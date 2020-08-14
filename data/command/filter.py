@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import io
 import json
 
 import discord
@@ -13,8 +14,13 @@ async def main(message, client):
 
     try:
         await message.author.send(f"{client.user}'s filter information!\n - {len(filters)} words")
+
+        result = ""
         for f in filters:
-            await message.author.send(f"- {f}")
+            result += f"- {f}\n"
+
+        result = io.BytesIO(result.encode("utf-8"))
+        await message.author.send(file=discord.File(result, "filter.txt"))
     except discord.errors.Forbidden:
         pass
 
