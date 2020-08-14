@@ -61,8 +61,9 @@ modules = dict()
 
 command_files = os.listdir("data/command/")
 for module_file in command_files:
-    module = importlib.import_module(f"data.command.{module_file.split('.')[0]}")
-    modules[module_file.split('.')[0]] = module
+    if not module_file.startswith("__"):
+        module = importlib.import_module(f"data.command.{module_file.split('.')[0]}")
+        modules[module_file.split('.')[0]] = module
 
 del command_files
 
@@ -77,7 +78,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    if message.author.bot:
+    if message.author.bot or isinstance(message.channel, discord.abc.PrivateChannel):
         return
 
     if message.content.startswith(option.prefix):

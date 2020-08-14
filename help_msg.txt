@@ -1,4 +1,0 @@
-{{prefix}}help        - show this message
-{{prefix}}invite      - Send invite link
-
-Tip. Mention the {{bot}}

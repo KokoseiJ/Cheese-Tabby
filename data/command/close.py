@@ -2,6 +2,8 @@
 
 import logging
 
+help = None
+
 logger = logging.getLogger()
 
 

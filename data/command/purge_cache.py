@@ -4,6 +4,8 @@ import logging
 
 from data.lib import cat_cache
 
+help = None
+
 logger = logging.getLogger()
 
 

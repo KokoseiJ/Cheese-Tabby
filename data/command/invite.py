@@ -4,6 +4,8 @@ import discord
 
 from data.lib import invite
 
+help = "Send Bot Invite link to you"
+
 
 async def main(message, client):
     await message.channel.send("```\nCheck your Private Message\n```")
