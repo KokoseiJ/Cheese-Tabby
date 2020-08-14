@@ -10,4 +10,4 @@ replace_on_limit = True
 
 # Bot Option
 prefix = "="
-default_permission = 35840
+default_permission = 35904

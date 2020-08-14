@@ -91,6 +91,15 @@ async def on_message(message):
     return
 
 
+@client.event
+async def on_raw_reaction_add(payload):
+    await client.fetch_channel(channel_id=payload.channel_id)
+    channel = await client.fetch_channel(channel_id=payload.channel_id)
+    message = await channel.fetch_message(id=payload.message_id)
+    if message.author.id == client.user.id and payload.user_id != client.user.id:
+        await message.delete()
+
+
 ##################################################################################
 # BOT Start
 try:

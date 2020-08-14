@@ -22,7 +22,9 @@ async def main(message):
                 if isinstance(content, str):
                     await message.channel.send(content=content)
                 else:
-                    await message.channel.send(file=discord.File(content, 'some_cat.png'))
+                    cat_img = await message.channel.send(file=discord.File(content, 'some_cat.png'))
+                    await cat_img.add_reaction("\U0001F1FD")
+
             except discord.errors.Forbidden:
                 await message.channel.send("```\nHello?\n"
                                            f"This bot need [Attach Files] Permission!!\n"
