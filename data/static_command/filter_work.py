@@ -27,3 +27,5 @@ async def main(message):
                 await message.channel.send("```\nHello?\n"
                                            f"This bot need [Attach Files] Permission!!\n"
                                            f"```\n <@{message.guild.owner_id}>")
+
+            return
