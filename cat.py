@@ -97,7 +97,9 @@ async def on_raw_reaction_add(payload):
     channel = await client.fetch_channel(channel_id=payload.channel_id)
     message = await channel.fetch_message(id=payload.message_id)
     if message.author.id == client.user.id and payload.user_id != client.user.id:
-        await message.delete()
+        x_emoji = [":regional_indicator_x:", "\U0001F1FD"]
+        if payload.emoji.name not in x_emoji:
+            await message.delete()
 
 
 ##################################################################################

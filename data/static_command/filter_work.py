@@ -16,18 +16,21 @@ async def main(message):
             logger.info(f"[{message.author.id}]{message.author} Called the Cat using '{item}'")
             logger.info(f"Original Text: {message.content}")
 
-            try:
-                content = await core.get()
-
-                if isinstance(content, str):
-                    await message.channel.send(content=content)
-                else:
+            content = await core.get()
+            if isinstance(content, str):
+                await message.channel.send(content=content)
+            else:
+                try:
                     cat_img = await message.channel.send(file=discord.File(content, 'some_cat.png'))
-                    await cat_img.add_reaction("\U0001F1FD")
+                except discord.errors.Forbidden:
+                    await message.channel.send("```\nHello?\n"
+                                               f"This bot need [Attach Files] and [Add Reactions] Permission!!\n"
+                                               f"```\n <@{message.guild.owner_id}>")
+                    return
 
-            except discord.errors.Forbidden:
-                await message.channel.send("```\nHello?\n"
-                                           f"This bot need [Attach Files] and [Add Reactions] Permission!!\n"
-                                           f"```\n <@{message.guild.owner_id}>")
+                try:
+                    await cat_img.add_reaction("\U0001F1FD")
+                except discord.errors.Forbidden:
+                    pass
 
             return
