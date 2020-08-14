@@ -23,5 +23,5 @@ async def main(message, client):
         await message.channel.send("```"
                                    f"Cached Cat: {len(cat_cache.get_cache_list())}\n"
                                    f"Cache Limit: {option.cache_limit}\n"
-                                   f"Cache Size: {cat_cache.get_cache_size()} B\n"
+                                   f"Cache Size: {cat_cache.get_cache_size() / (1024 * 1024)} MB\n"
                                    "```")
