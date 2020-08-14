@@ -27,7 +27,7 @@ except ModuleNotFoundError:
     import discord
 
 from data.lib import guild, log, start_page, token, cache
-from data.static_command import filter_work, mention
+from data.static_command import filter_work
 
 try:
     import option
@@ -86,10 +86,6 @@ async def on_message(message):
         for command in commands:
             if message.content.startswith(option.prefix + command):
                 await modules[command].main(message, client)
-
-    if client.user.mentioned_in(message) and str(client.user.id) in message.content:
-        await mention.main(message, client)
-        return
 
     await filter_work.main(message)
     return

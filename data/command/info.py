@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import json
-import logging
 
 import option
 from data.lib import cat_cache
 
 from option import prefix
 
-
-logger = logging.getLogger()
+help = "Check {{bot}}'s Information"
 
 
 async def main(message, client):
@@ -19,7 +17,7 @@ async def main(message, client):
     await message.channel.send("```"
                                f"Connected to {len(client.guilds)} guilds\n"
                                f"BOT Owner: {app.owner}\n\n"
-                               f"Filter words: {len(filters)}\n\t-> use '{prefix}filter' command to check it!"
+                               f"Filter words: {len(filters)}\n  -> use '{prefix}filter' command to check it!"
                                "```")
     if message.author.id == app.owner.id:
         await message.channel.send("```"
