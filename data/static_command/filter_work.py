@@ -27,7 +27,7 @@ async def main(message):
 
             except discord.errors.Forbidden:
                 await message.channel.send("```\nHello?\n"
-                                           f"This bot need [Attach Files] Permission!!\n"
+                                           f"This bot need [Attach Files] and [Add Reactions] Permission!!\n"
                                            f"```\n <@{message.guild.owner_id}>")
 
             return
