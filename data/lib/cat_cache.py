@@ -115,7 +115,6 @@ def get_all_hash():
         if t is None:
             logger.info("Wrong Cache")
         else:
-            logger.info(f"Result: {cache_id[:7]}... | {t[:10]}...")
             result.append(t)
 
     return result

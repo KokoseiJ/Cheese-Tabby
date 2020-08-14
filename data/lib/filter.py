@@ -13,6 +13,7 @@ def load_filter(file_name):
         with open(f"./data/filter/{file_name}", "r", encoding="utf-8") as filter_file:
             cache = filter_file.read()
 
+        cache = cache.replace("\n", "")
         cache = cache.replace(" ", "").split(",")
         return cache
     else:
