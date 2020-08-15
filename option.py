@@ -9,5 +9,5 @@ cache_limit = 100000
 replace_on_limit = True
 
 # Bot Option
-prefix = "="
+prefix = "=="
 default_permission = 35904
