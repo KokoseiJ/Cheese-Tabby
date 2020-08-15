@@ -2,14 +2,15 @@
 
 import logging
 
+from data.lib import admin
+
 help = None
 
 logger = logging.getLogger()
 
 
 async def main(message, client):
-    app = await client.application_info()
-    if app.owner.id == message.author.id:
+    if await admin.check(message, client):
         logger.info(f"Closed bot by {message.author}")
 
         await message.channel.send(":wave:")

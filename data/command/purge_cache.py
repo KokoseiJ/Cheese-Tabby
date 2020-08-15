@@ -2,7 +2,7 @@
 
 import logging
 
-from data.lib import cat_cache
+from data.lib import admin, cat_cache
 
 help = None
 
@@ -10,8 +10,7 @@ logger = logging.getLogger()
 
 
 async def main(message, client):
-    app = await client.application_info()
-    if app.owner.id == message.author.id:
+    if await admin.check(message, client):
         logger.info("Removing cat image from 'cat_cache'...")
 
         cc = len(cat_cache.get_cache_list())

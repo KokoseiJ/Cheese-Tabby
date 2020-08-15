@@ -2,7 +2,7 @@
 
 import logging
 
-from data.lib import filter
+from data.lib import admin, filter
 
 help = None
 
@@ -10,8 +10,7 @@ logger = logging.getLogger()
 
 
 async def main(message, client):
-    app = await client.application_info()
-    if app.owner.id == message.author.id:
+    if await admin.check(message, client):
         filter.get_filter()
         await message.channel.send("Filter reloaded!")
     else:
