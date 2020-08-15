@@ -78,6 +78,7 @@ async def on_message(message):
         for command in commands:
             if message.content.startswith(option.prefix + command):
                 await modules[command].main(message, client)
+                return
 
     await filter_work.main(message)
     return
