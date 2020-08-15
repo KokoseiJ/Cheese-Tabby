@@ -14,10 +14,10 @@ async def main(message, client):
     app = await client.application_info()
     filters = json.load(open("data/cache__filters.json", mode="r", encoding="utf-8"))
 
-    await message.channel.send("``\n`"
+    await message.channel.send("```\n"
                                f"Connected to {len(client.guilds)} guilds\n"
                                f"BOT Owner: {app.owner}\n\n"
-                               f"Filter words: {len(filters)}\n  -> use '{prefix}filter' command to check it!"
+                               f"Filter words: {len(filters)}\n  -> use '{prefix}filter' command to check it!\n"
                                "```")
     if message.author.id == app.owner.id:
         await message.channel.send("```\n"
