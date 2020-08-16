@@ -12,7 +12,7 @@ logger = logging.getLogger()
 
 async def main(message):
     for item in json.load(open("data/cache__filters.json", mode="r", encoding="utf-8")):
-        if item.lower() in str(message.content).lower():
+        if item.lower() in str(message.content).replace(" ", "").lower():
             logger.info(f"[{message.author.id}]{message.author} Called the Cat! Used Words: {item} ")
 
             content = await core.get()
