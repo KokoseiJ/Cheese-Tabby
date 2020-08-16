@@ -13,7 +13,7 @@ logger = logging.getLogger()
 async def main(message):
     for item in json.load(open("data/cache__filters.json", mode="r", encoding="utf-8")):
         if item.lower() in str(message.content).lower():
-            logger.info(f"[{message.author.id}]{message.author} Called the Cat using '{item}'")
+            logger.info(f"[{message.author.id}]{message.author} Maybe? Called the Cat!")
             logger.info(f"Original Text: {message.content}")
 
             content = await core.get()
@@ -28,9 +28,10 @@ async def main(message):
                                                f"```\n <@{message.guild.owner_id}>")
                     return
 
-                try:
-                    await cat_img.add_reaction("\U0001F1FD")
-                except discord.errors.Forbidden:
-                    pass
+                if len(item.lower()) is not len(message.content):
+                    try:
+                        await cat_img.add_reaction("\U0001F1FD")
+                    except discord.errors.Forbidden:
+                        pass
 
             return

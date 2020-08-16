@@ -77,6 +77,7 @@ async def on_message(message):
         commands = list(modules.keys())
         for command in commands:
             if message.content.startswith(option.prefix + command):
+                logger.info(f"[{message.author.id}]{message.author} use command '{command}'")
                 await modules[command].main(message, client)
                 return
 

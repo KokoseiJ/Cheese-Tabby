@@ -10,20 +10,16 @@ help = "Send the cat"
 
 async def main(message, client):
     content = await core.get()
+
     if isinstance(content, str):
         await message.channel.send(content=content)
     else:
         try:
-            cat_img = await message.channel.send(file=discord.File(content, 'some_cat.png'))
+            await message.channel.send(file=discord.File(content, 'some_cat.png'))
         except discord.errors.Forbidden:
             await message.channel.send("```\nHello?\n"
                                        f"This bot need [Attach Files] and [Add Reactions] Permission!!\n"
                                        f"```\n <@{message.guild.owner_id}>")
             return
-
-        try:
-            await cat_img.add_reaction("\U0001F1FD")
-        except discord.errors.Forbidden:
-            pass
 
     return
