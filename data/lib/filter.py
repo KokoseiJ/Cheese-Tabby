@@ -32,7 +32,7 @@ def get_filter():
             for tmp in cache:
                 filters.append(tmp)
 
-    logger.info("<< filter information >>")
+    logger.info("<< Filter Information >>")
     logger.info(f" - {len(filters)} words")
     logger.info(f" - filters: {filters}")
 

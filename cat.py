@@ -51,12 +51,23 @@ cache_filter()
 ##################################################################################
 modules = dict()
 
+logger.info("Loading Command Module...")
 command_files = os.listdir("data/command/")
 for module_file in command_files:
     if not module_file.startswith("__"):
-        module = importlib.import_module(f"data.command.{module_file.split('.')[0]}")
-        modules[module_file.split('.')[0]] = module
+        try:
+            module = importlib.import_module(f"data.command.{module_file.split('.')[0]}")
 
+            if module.__getattribute__("main"):
+                modules[module_file.split('.')[0]] = module
+                logger.info(f"Loaded Command '{module_file.split('.')[0]}' from {module_file}")
+        except (AttributeError, Exception):
+            logger.critical(f"Fail to load Command from '{module_file}'")
+
+logger.info("Command Module Loaded!")
+logger.info("<< Command Module Information >>")
+logger.info(f" - {len(modules.keys())} commands")
+logger.info(f" - Commands: {list(modules.keys())}")
 del command_files
 
 

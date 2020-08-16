@@ -13,10 +13,10 @@ logger = logging.getLogger()
 async def main(message):
     for item in json.load(open("data/cache__filters.json", mode="r", encoding="utf-8")):
         if item.lower() in str(message.content).lower():
-            logger.info(f"[{message.author.id}]{message.author} Maybe? Called the Cat!")
-            logger.info(f"Original Text: {message.content}")
+            logger.info(f"[{message.author.id}]{message.author} Called the Cat! Used Words: {item} ")
 
             content = await core.get()
+
             if isinstance(content, str):
                 await message.channel.send(content=content)
             else:
