@@ -117,7 +117,7 @@ except discord.errors.LoginFailure:
 
     token_worker = token.Token(file_name="token.json",
                                service="Discord")
-    bot_token = token_worker.reset_token()
+    token_worker.reset_token()
     del bot_token
 except Exception as e:
     logger.critical("=" * 30)
