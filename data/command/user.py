@@ -42,6 +42,8 @@ class userCommand(commands.Cog, name="for @everyone"):
     @commands.command(help="Send Bot Invite link to you")
     @commands.check(is_public)
     async def invite(self, ctx):
+        await ctx.send("```\nCheck your Private Message!\n```")
+
         embed = discord.Embed(title="Invite Me!", color=16579836,
                               description="Please Click me!",
                               url=invite.get_link(ctx.bot))
@@ -54,16 +56,16 @@ class userCommand(commands.Cog, name="for @everyone"):
     @commands.check(is_public)
     async def filter(self, ctx):
         filters = json.load(open("data/cache__filters.json", mode="r", encoding="utf-8"))
-        await ctx.send("```\nCheck your Private Message\n```")
+        await ctx.send("```\nCheck your Private Message!\n```")
 
         try:
-            await ctx.send(f"{ctx.bot.user}'s filter information!\n - {len(filters)} words")
+            await ctx.author.send(f"{ctx.bot.user}'s filter information!\n - {len(filters)} words")
 
             result = ""
             for f in filters:
                 result += f"- {f}\n"
 
             result = io.BytesIO(result.encode("utf-8"))
-            await ctx.send(file=discord.File(result, "filter.txt"))
+            await ctx.author.send(file=discord.File(result, "filter.txt"))
         except discord.errors.Forbidden:
             pass
