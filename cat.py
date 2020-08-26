@@ -34,7 +34,7 @@ except ModuleNotFoundError:
 log.create_logger()
 logger = logging.getLogger()
 
-bot = commands.Bot(command_prefix=commands.when_mentioned_or(option.prefix))
+bot = commands.Bot(command_prefix=option.prefix)
 
 token_worker = token.Token(file_name="token.json",
                            service="Discord")
@@ -42,16 +42,11 @@ bot_token = token_worker.get_token()
 del token_worker
 
 
+##################################################################################
 def cache_filter():
     from data.lib import filter
     filter.get_filter()
 
-
-cache_filter()
-
-
-##################################################################################
-# Command Loader
 
 def load_command():
     for module_file in os.listdir("data/command/"):
@@ -64,10 +59,12 @@ def load_command():
                     try:
                         bot.add_cog(getattr(module, mod)(bot))
                         logger.info("OK! - Cogs Registered")
-                    except Exception as e:
-                        logger.critical(f"FAIL! - {e.__class__.__name__}: {e}")
+                    except Exception as moduleLoad_error:
+                        logger.critical(f"FAIL! - {moduleLoad_error.__class__.__name__}:"
+                                        f" {moduleLoad_error}")
 
 
+cache_filter()
 load_command()
 
 
@@ -110,10 +107,9 @@ except discord.errors.LoginFailure:
                                service="Discord")
     token_worker.reset_token()
     del bot_token
-except Exception as e:
-    logger.critical("=" * 30)
-    logger.critical("<< Bot is dead >>")
-    logger.critical(e)
-    logger.critical("=" * 30)
+except Exception as botStart_error:
+    logger.critical("--------<< Bot is dead >>--------")
+    logger.critical(f"{botStart_error.__class__.__name__}:"
+                    f" {botStart_error}")
 
 cache.run()
