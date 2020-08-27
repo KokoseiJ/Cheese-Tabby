@@ -14,7 +14,7 @@ def is_public(ctx):
     return not isinstance(ctx.message.channel, discord.abc.PrivateChannel)
 
 
-class ownerCommand(commands.Cog, name="owner ONLY"):
+class ownerCommand(commands.Cog, name="for Bot OWNER"):
     @commands.command(help="Shutdown the bot")
     @commands.check(is_public)
     async def close(self, ctx):
@@ -28,12 +28,17 @@ class ownerCommand(commands.Cog, name="owner ONLY"):
     @commands.check(is_public)
     async def reload(self, ctx):
         if await ctx.bot.is_owner(user=ctx.author):
-            filter.get_filter()
-            await ctx.send("Filter reloaded!")
+            f = filter.get_filter()
+            await ctx.author.send(
+                "```\n"
+                f"{ctx.bot.user}'s filter information!\n"
+                f" - {len(f)} words\n"
+                "```"
+            )
         else:
             logger.warning(f"[{ctx.author.id}]{ctx.author} try to use owner command")
 
-    @commands.command(help="Delete the same pictures")
+    @commands.command(help="Delete the same cached image")
     @commands.check(is_public)
     async def purge(self, ctx):
         if await ctx.bot.is_owner(user=ctx.author):
@@ -41,25 +46,29 @@ class ownerCommand(commands.Cog, name="owner ONLY"):
             img_cache.purge_same()
             after = len(img_cache.get_cache_list())
 
-            await ctx.send(f"{before} => {after}")
+            await ctx.send(
+                f"{before} => {after}"
+            )
         else:
             logger.warning(f"[{ctx.author.id}]{ctx.author} try to use owner command")
 
-    @commands.command(help="Delete all pictures")
+    @commands.command(help="Delete all cached images")
     @commands.check(is_public)
     async def purge_all(self, ctx):
         if await ctx.bot.is_owner(user=ctx.author):
-            logger.info("Removing cat image from 'cat_cache'...")
+            logger.info("Removing cached image from cache directory...")
 
             cc = len(img_cache.get_cache_list())
             logger.info(f"'{cc}' detected")
-            await ctx.send("```\n"
-                           f"{cc} => 0\n"
-                           "```")
 
             if cc == 0:
-                logger.info("'cat_cache' is already empty")
+                logger.info("cache directory is already empty")
             else:
                 img_cache.purge_cache()
+                await ctx.send(
+                    "```\n"
+                    f"Deleted!"
+                    "```"
+                )
         else:
             logger.warning(f"[{ctx.author.id}]{ctx.author} try to use owner command")

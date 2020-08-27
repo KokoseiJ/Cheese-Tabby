@@ -37,3 +37,4 @@ def get_filter():
     logger.info(f" - filters: {filters}")
 
     json.dump(filters, open("data/cache__filters.json", mode="w", encoding="utf-8"))
+    return filters

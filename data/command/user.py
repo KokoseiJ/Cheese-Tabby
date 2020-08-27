@@ -77,7 +77,12 @@ class userCommand(commands.Cog, name="for @everyone"):
         )
 
         try:
-            await ctx.author.send(f"{ctx.bot.user}'s filter information!\n - {len(filters)} words")
+            await ctx.author.send(
+                "```\n"
+                f"{ctx.bot.user}'s filter information!\n"
+                f" - {len(filters)} words\n"
+                "```"
+            )
 
             result = ""
             for f in filters:
