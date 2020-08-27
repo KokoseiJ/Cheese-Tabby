@@ -39,13 +39,12 @@ def get_cache_size():
 
 
 async def save_cat(file):
-    check_dir()
     file_name = f"{uuid.uuid4()}"
     logger.info(f"Try to Save Cat at '{cache_dir}' name as '{file_name}'")
 
     cache_hash = get_hash_by_byte(file.getbuffer())
-    if cache_hash in get_all_hash():
-        logger.info("PASS! Already Saved Cache Image!")
+    if cache_hash in await get_all_hash():
+        logger.info("PASS! Already Cached Image!")
         return True
 
     try:
@@ -71,15 +70,14 @@ async def get_cat_random(raw=False):
 
     if raw is True:
         return caches[cat_id]
-    return get_cat_by_id(caches[cat_id])
+    return await get_cat_by_id(caches[cat_id])
 
 
-def get_cat_by_id(cache_id, raw=False):
+async def get_cat_by_id(cache_id):
     try:
-        with open(os.path.join(cache_dir, cache_id), mode='rb') as worker:
-            if raw is True:
-                return worker.read()
-            return io.BytesIO(worker.read())
+        async with aiofiles.open(os.path.join(cache_dir, cache_id), mode='rb') as worker:
+            content = await worker.read()
+            return io.BytesIO(content)
     except Exception as e:
         logger.warning(f"FAIL - {e.__class__.__name__}: {e}")
         return False
@@ -95,10 +93,10 @@ def purge_cache():
             logger.info(f"Fail to remove '{cache}' cause '{e.__class__.__name__}: {e}'")
 
 
-def get_hash_by_id(cache_id):
-    cat = get_cat_by_id(cache_id, raw=True)
+async def get_hash_by_id(cache_id):
+    cat = await get_cat_by_id(cache_id)
     if cat is not False:
-        return get_hash_by_byte(cat)
+        return get_hash_by_byte(bytes(cat.getbuffer()))
     else:
         return None
 
@@ -107,11 +105,11 @@ def get_hash_by_byte(byte_data: bytes):
     return hashlib.md5(byte_data).hexdigest()
 
 
-def get_all_hash():
+async def get_all_hash():
     logger.info("Getting ALL Hash data...")
     result = []
     for cache_id in get_cache_list():
-        t = get_hash_by_id(cache_id)
+        t = await get_hash_by_id(cache_id)
         if t is None:
             logger.info("Wrong Cache")
         else:
@@ -120,12 +118,12 @@ def get_all_hash():
     return result
 
 
-def purge_same():
+async def purge_same():
     cache_list = get_cache_list()
     cache_hash = []
 
     for i in cache_list:
-        t = get_hash_by_id(i)
+        t = await get_hash_by_id(i)
         if t not in cache_hash:
             cache_hash.append(t)
         else:

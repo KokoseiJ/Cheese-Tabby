@@ -42,7 +42,7 @@ class ownerCommand(commands.Cog, name="for Bot OWNER"):
     async def purge(self, ctx):
         if await ctx.bot.is_owner(user=ctx.author):
             before = len(img_cache.get_cache_list())
-            img_cache.purge_same()
+            await img_cache.purge_same()
             after = len(img_cache.get_cache_list())
 
             await ctx.send(
