@@ -9,9 +9,9 @@ import hashlib
 
 import aiofiles
 
-logger = logging.getLogger()
+from option import cache_dir
 
-cache_dir = "img_cache/"
+logger = logging.getLogger()
 
 
 def get_cache_list():

@@ -28,11 +28,10 @@ class ownerCommand(commands.Cog, name="for Bot OWNER"):
     @commands.check(is_public)
     async def reload(self, ctx):
         if await ctx.bot.is_owner(user=ctx.author):
-            f = filter.get_filter()
-            await ctx.author.send(
+            await ctx.send(
                 "```\n"
                 f"{ctx.bot.user}'s filter information!\n"
-                f" - {len(f)} words\n"
+                f" - {len(filter.get_filter())} words\n"
                 "```"
             )
         else:
@@ -47,7 +46,9 @@ class ownerCommand(commands.Cog, name="for Bot OWNER"):
             after = len(img_cache.get_cache_list())
 
             await ctx.send(
-                f"{before} => {after}"
+                "```\n"
+                f"{before - after} Deleted!"
+                "```"
             )
         else:
             logger.warning(f"[{ctx.author.id}]{ctx.author} try to use owner command")
@@ -63,11 +64,16 @@ class ownerCommand(commands.Cog, name="for Bot OWNER"):
 
             if cc == 0:
                 logger.info("cache directory is already empty")
+                await ctx.send(
+                    "```\n"
+                    "Already empty!"
+                    "```"
+                )
             else:
                 img_cache.purge_cache()
                 await ctx.send(
                     "```\n"
-                    f"Deleted!"
+                    f"{cc} Deleted!"
                     "```"
                 )
         else:

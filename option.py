@@ -11,3 +11,7 @@ replace_on_limit = True
 # Bot Option
 prefix = "=="
 default_permission = 35904
+
+# Offline Mode
+use_cache_only = False
+cache_dir = "img_cache/"

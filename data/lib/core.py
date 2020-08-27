@@ -5,7 +5,6 @@ import logging
 import option
 from data.lib import api, img_cache
 
-
 logger = logging.getLogger()
 
 
@@ -17,8 +16,10 @@ async def get():
         logger.info("Set timeout to default value [3] ")
         tm_out = 3
 
-    cat_worker = await api.get_data(api_url=option.api_url,
-                                    tm_out=tm_out)
+    cat_worker = await api.get_image(
+        api_url=option.api_url,
+        tm_out=tm_out
+    )
 
     if cat_worker[0] is False:
         logging.info("Try to use Cat Cache...")
