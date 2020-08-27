@@ -21,7 +21,7 @@ except ModuleNotFoundError:
     from discord.ext import commands
 
 from data.lib import guild, log, start_page, token, cache
-from data.lib import filter_work
+from data.lib import on_message
 
 try:
     import option
@@ -35,9 +35,9 @@ log.create_logger()
 logger = logging.getLogger()
 
 bot = commands.Bot(command_prefix=option.prefix)
-
 token_worker = token.Token(file_name="token.json",
                            service="Discord")
+
 bot_token = token_worker.get_token()
 del token_worker
 
@@ -64,8 +64,7 @@ def load_command():
                                         f" {moduleLoad_error}")
 
 
-cache_filter()
-load_command()
+cache_filter(), load_command()
 
 
 ##################################################################################
@@ -77,11 +76,11 @@ async def on_ready():
 
 
 @bot.listen(name="on_message")
-async def my_message(message):
+async def filter_work(message):
     if message.author.bot or isinstance(message.channel, discord.abc.PrivateChannel):
         return
 
-    await filter_work.main(message)
+    await on_message.do_filter(message=message)
 
 
 @bot.event
@@ -89,10 +88,21 @@ async def on_raw_reaction_add(payload):
     await bot.fetch_channel(channel_id=payload.channel_id)
     channel = await bot.fetch_channel(channel_id=payload.channel_id)
     message = await channel.fetch_message(id=payload.message_id)
+
     if message.author.id == bot.user.id and payload.user_id != bot.user.id:
-        x_emoji = [":regional_indicator_x:", "\U0001F1FD"]
+        x_emoji = [
+            "🇽", "❌"
+        ]
+
         if payload.emoji.name in x_emoji:
-            await message.delete()
+            logger.info(f"Emoji added! Removing Image...")
+
+            try:
+                await message.delete()
+            except discord.errors.NotFound:
+                logger.error("Failed to delete image... I think it's already deleted.")
+            except (discord.errors.HTTPException, Exception):
+                logger.error("Failed to delete image... But just ignore it.")
 
 
 ##################################################################################
@@ -105,11 +115,12 @@ except discord.errors.LoginFailure:
 
     token_worker = token.Token(file_name="token.json",
                                service="Discord")
+
     token_worker.reset_token()
     del bot_token
 except Exception as botStart_error:
     logger.critical("--------<< Bot is dead >>--------")
     logger.critical(f"{botStart_error.__class__.__name__}:"
                     f" {botStart_error}")
-
-cache.run()
+finally:
+    cache.run()

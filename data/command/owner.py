@@ -5,8 +5,7 @@ import logging
 import discord
 from discord.ext import commands
 
-from data.lib import cat_cache, filter
-import option
+from data.lib import img_cache, filter
 
 logger = logging.getLogger()
 
@@ -34,25 +33,13 @@ class ownerCommand(commands.Cog, name="owner ONLY"):
         else:
             logger.warning(f"[{ctx.author.id}]{ctx.author} try to use owner command")
 
-    @commands.command(help="Check cache information")
-    @commands.check(is_public)
-    async def cache(self, ctx):
-        if await ctx.bot.is_owner(user=ctx.author):
-            await ctx.send("```\n"
-                           f"Cached Cat: {len(cat_cache.get_cache_list())}\n"
-                           f"Cache Limit: {option.cache_limit}\n"
-                           f"Cache Size: {round(cat_cache.get_cache_size() / (1024 * 1024), 2)} MB\n"
-                           "```")
-        else:
-            logger.warning(f"[{ctx.author.id}]{ctx.author} try to use owner command")
-
     @commands.command(help="Delete the same pictures")
     @commands.check(is_public)
     async def purge(self, ctx):
         if await ctx.bot.is_owner(user=ctx.author):
-            before = len(cat_cache.get_cache_list())
-            cat_cache.purge_same()
-            after = len(cat_cache.get_cache_list())
+            before = len(img_cache.get_cache_list())
+            img_cache.purge_same()
+            after = len(img_cache.get_cache_list())
 
             await ctx.send(f"{before} => {after}")
         else:
@@ -64,13 +51,15 @@ class ownerCommand(commands.Cog, name="owner ONLY"):
         if await ctx.bot.is_owner(user=ctx.author):
             logger.info("Removing cat image from 'cat_cache'...")
 
-            cc = len(cat_cache.get_cache_list())
+            cc = len(img_cache.get_cache_list())
             logger.info(f"'{cc}' detected")
-            await ctx.send(f"```\n{cc} => 0\n```")
+            await ctx.send("```\n"
+                           f"{cc} => 0\n"
+                           "```")
 
             if cc == 0:
                 logger.info("'cat_cache' is already empty")
             else:
-                cat_cache.purge_cache()
+                img_cache.purge_cache()
         else:
             logger.warning(f"[{ctx.author.id}]{ctx.author} try to use owner command")

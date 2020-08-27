@@ -11,7 +11,7 @@ import aiofiles
 
 logger = logging.getLogger()
 
-cache_dir = "cat_cache/"
+cache_dir = "img_cache/"
 
 
 def get_cache_list():
@@ -27,7 +27,7 @@ def get_cache_size():
     items = get_cache_list()
     result = 0
 
-    logger.info("Try to get size in 'cat_cache'")
+    logger.info(f"Try to get size in '{cache_dir}'")
     for item in items:
         try:
             result = result + get_size_by_id(item)
@@ -45,7 +45,7 @@ async def save_cat(file):
 
     cache_hash = get_hash_by_byte(file.getbuffer())
     if cache_hash in get_all_hash():
-        logger.info("PASS! Already Saved Cat!")
+        logger.info("PASS! Already Saved Cache Image!")
         return True
 
     try:
