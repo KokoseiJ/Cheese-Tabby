@@ -1,3 +1,7 @@
-meow, miaow, cat
-kitty, kitten, tabby
-mainecoon, calico cat, neko
+cat
+meow, miaow
+kitty, kitten
+tabby
+mainecoon
+calico cat
+neko
