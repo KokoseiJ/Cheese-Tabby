@@ -36,15 +36,19 @@ def get_type(option):
 
 
 async def set_status(bot, status, activity, name):
-    await bot.change_presence(status=get_status(status),
-                              activity=discord.Activity(type=get_type(activity),
-                                                        name=name)
-                              )
+    await bot.change_presence(
+        status=get_status(status),
+        activity=discord.Activity(
+            type=get_type(activity),
+            name=name
+        )
+    )
 
 
 def bot_info(bot):
     logger.info("-" * 50)
-    logger.info(f"BOT Login -> {bot.user}")
+    logger.info(f" - BOT Login -> {bot.user}")
+    logger.info(f" - Connected to ( {len(bot.guilds)} ) servers!")
     logger.info("-" * 50)
-    logger.info(f"invite bot: {invite.get_link(bot)}")
+    logger.info(f" - Invite bot: {invite.get_link(bot)}")
     logger.info("-" * 50)

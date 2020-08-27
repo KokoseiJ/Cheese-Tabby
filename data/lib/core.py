@@ -29,7 +29,7 @@ async def get():
                 logging.warning("Send Error Message!")
                 return f"**WARNING! API SERVER ERROR!**\n - {cat_worker[1]}"
             else:
-                return await img_cache.get_cat_random()
+                return True, await img_cache.get_cat_random()
         elif cat_worker[0] is True:
             if option.cache_limit > len(img_cache.get_cache_list()):
                 logger.info("Adding Cat to 'cat_cache'...")
@@ -42,7 +42,7 @@ async def get():
                     await img_cache.replace_cat(cat_worker[1])
                 pass
 
-            return cat_worker[1]
+            return False, cat_worker[1]
     else:
         if len(img_cache.get_cache_list()) == 0:
             logging.warning("Cache Directory is EMPTY!")
@@ -51,5 +51,5 @@ async def get():
             return "**Cache is EMPTY!!!**\n" \
                    "add image at cache directory or turn off the use_cache_only mode"
         else:
-            return await img_cache.get_cat_random()
+            return True, await img_cache.get_cat_random()
 

@@ -30,7 +30,7 @@ class ownerCommand(commands.Cog, name="for Bot OWNER"):
         if await ctx.bot.is_owner(user=ctx.author):
             await ctx.send(
                 "```\n"
-                f"{ctx.bot.user}'s filter information!\n"
+                f" - {ctx.bot.user}'s filter information!\n"
                 f" - {len(filter.get_filter())} words\n"
                 "```"
             )
@@ -47,7 +47,7 @@ class ownerCommand(commands.Cog, name="for Bot OWNER"):
 
             await ctx.send(
                 "```\n"
-                f"{before - after} Deleted!"
+                f" - {before - after} Deleted!"
                 "```"
             )
         else:
@@ -66,14 +66,14 @@ class ownerCommand(commands.Cog, name="for Bot OWNER"):
                 logger.info("cache directory is already empty")
                 await ctx.send(
                     "```\n"
-                    "Already empty!"
+                    " - Already empty!"
                     "```"
                 )
             else:
                 img_cache.purge_cache()
                 await ctx.send(
                     "```\n"
-                    f"{cc} Deleted!"
+                    f" - {cc} Deleted!"
                     "```"
                 )
         else:

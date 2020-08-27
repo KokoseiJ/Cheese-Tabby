@@ -28,8 +28,8 @@ class userCommand(commands.Cog, name="for @everyone"):
 
         await ctx.send(
             "```\n"
-            f"Connected to {len(ctx.bot.guilds)} guilds\n"
-            f"Filter words: {len(filters)}\n"
+            f" - Connected to {len(ctx.bot.guilds)} guilds\n"
+            f" - Filter words: {len(filters)}\n"
             "```"
         )
 
@@ -38,7 +38,7 @@ class userCommand(commands.Cog, name="for @everyone"):
     async def invite(self, ctx):
         await ctx.send(
             "```\n"
-            "Check your Private Message!\n"
+            " - Check your Private Message!\n"
             "```"
         )
 
@@ -54,7 +54,7 @@ class userCommand(commands.Cog, name="for @everyone"):
         except discord.errors.Forbidden:
             await ctx.send(
                 "```\n"
-                "Fail to send Private Message..."
+                " - Fail to send Private Message..."
                 "```",
                 embed=embed
             )
@@ -72,14 +72,14 @@ class userCommand(commands.Cog, name="for @everyone"):
 
         await ctx.send(
             "```\n"
-            "Check your Private Message!\n"
+            " - Check your Private Message!\n"
             "```"
         )
 
         try:
             await ctx.author.send(
                 "```\n"
-                f"{ctx.bot.user}'s filter information!\n"
+                f" - {ctx.bot.user}'s filter information!\n"
                 f" - {len(filters)} words\n"
                 "```"
             )
@@ -103,8 +103,8 @@ class userCommand(commands.Cog, name="for @everyone"):
     async def cache(self, ctx):
         await ctx.send(
             "```\n"
-            f"Cached Cat: {len(img_cache.get_cache_list())}\n"
-            f"Cache Limit: {option.cache_limit}\n"
-            f"Cache Size: {round(img_cache.get_cache_size() / (1024 * 1024), 2)} MB\n"
+            f" - Cached Cat: {len(img_cache.get_cache_list())}\n"
+            f" - Cache Limit: {option.cache_limit}\n"
+            f" - Cache Size: {round(img_cache.get_cache_size() / (1024 * 1024), 2)} MB\n"
             "```"
         )

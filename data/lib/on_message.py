@@ -20,7 +20,9 @@ async def do_filter(message: discord.message):
         if item.lower() in msg_content.lower():
             logger.info(f"[{message.author.id}]{message.author} Called the Cat! Used Word: {item} ")
 
-            content = await core.get()
+            ct = await core.get()
+            used_cache, content = ct[0], ct[1]
+            del ct
 
             if isinstance(content, str):
                 await message.channel.send(
@@ -44,7 +46,10 @@ async def do_filter(message: discord.message):
 
                 if len(item.lower()) is not len(msg_content):
                     try:
-                        await cat_img.add_reaction("🇽")
+                        if used_cache is True:
+                            await cat_img.add_reaction("❌")
+                        else:
+                            await cat_img.add_reaction("🇽")
                     except discord.errors.Forbidden:
                         logger.warning("Fail to add emoji...")
 

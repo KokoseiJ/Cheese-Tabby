@@ -12,6 +12,19 @@ cache_dir = "img_cache/"
 # Bot Option
 prefix = "=="
 default_permission = 35904
+use_Auto_shard = True
+
+
+# Bot Presence
+class presence:
+    # [online / idle / dnd]
+    status = "idle"
+
+    # [playing / streaming / listening / watching]
+    activity = "watching"
+
+    name = "Cat"
+
 
 # Offline Mode
 use_cache_only = False
