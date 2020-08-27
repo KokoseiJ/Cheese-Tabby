@@ -34,7 +34,9 @@ except ModuleNotFoundError:
 log.create_logger()
 logger = logging.getLogger()
 
-bot = commands.Bot(command_prefix=option.prefix)
+# bot = commands.Bot(command_prefix=option.prefix)
+bot = commands.AutoShardedBot(command_prefix=option.prefix)
+
 token_worker = token.Token(file_name="token.json",
                            service="Discord")
 

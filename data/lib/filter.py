@@ -32,9 +32,9 @@ def get_filter():
             for tmp in cache:
                 filters.append(tmp)
 
-    logger.info("<< Filter Information >>")
+    logger.info("--------<< Filter Information >>--------")
     logger.info(f" - {len(filters)} words")
-    logger.info(f" - filters: {filters}")
+    logger.info(f" - more information use 'filter' command!")
 
     json.dump(filters, open("data/cache__filters.json", mode="w", encoding="utf-8"))
     return filters

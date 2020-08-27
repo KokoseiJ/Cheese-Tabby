@@ -12,8 +12,12 @@ logger = logging.getLogger()
 
 
 async def do_filter(message: discord.message):
+    msg_content = message.content
+    for black_item in [" ", ".", ",", "!", "?", "-", "_", "\n"]:
+        msg_content = msg_content.replace(black_item, "")
+
     for item in json.load(open("data/cache__filters.json", mode="r", encoding="utf-8")):
-        if item.lower() in str(message.content).replace(" ", "").lower():
+        if item.lower() in msg_content.lower():
             logger.info(f"[{message.author.id}]{message.author} Called the Cat! Used Word: {item} ")
 
             content = await core.get()
@@ -38,7 +42,7 @@ async def do_filter(message: discord.message):
                     )
                     return
 
-                if len(item.lower()) is not len(message.content):
+                if len(item.lower()) is not len(msg_content):
                     try:
                         await cat_img.add_reaction("🇽")
                     except discord.errors.Forbidden:
