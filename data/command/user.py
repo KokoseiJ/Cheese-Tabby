@@ -113,7 +113,7 @@ class userCommand(commands.Cog, name="for @everyone"):
             "```\n"
             f" - Cached Image: {len(img_cache.get_cache_list())}\n"
             f" - Cache Limit: {option.cache_limit}\n"
-            f" - Cache Size: {round(img_cache.get_cache_size() / (1024 * 1024), 2)} MB\n"
+            f" - Cache Size: {round(img_cache.get_cache_size() / (1000 * 1000), 2)} MB\n"
             "```"
         )
 
