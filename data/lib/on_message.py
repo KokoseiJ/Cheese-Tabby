@@ -12,8 +12,18 @@ logger = logging.getLogger()
 
 
 async def do_filter(message: discord.message):
+    black_item_list = [
+        "1", "2", "3",
+        "4", "5", "6",
+        "7", "8", "9",
+        "*", "0", "#",
+        " ", ".", ",",
+        "!", "?", "-",
+        "_", "=", "\n",
+    ]
+
     msg_content = message.content
-    for black_item in [" ", ".", ",", "!", "?", "-", "_", "\n"]:
+    for black_item in black_item_list:
         msg_content = msg_content.replace(black_item, "")
 
     for item in json.load(open("data/cache__filters.json", mode="r", encoding="utf-8")):
@@ -44,7 +54,7 @@ async def do_filter(message: discord.message):
                     )
                     return
 
-                if len(item.lower()) is not len(msg_content):
+                if len(msg_content.replace(item.lower(), "")) != 0:
                     try:
                         if used_cache is True:
                             await cat_img.add_reaction("❌")
