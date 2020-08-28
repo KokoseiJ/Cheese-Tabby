@@ -48,7 +48,7 @@ async def set_status(bot, status, activity, name):
 def bot_info(bot):
     logger.info("-" * 50)
     logger.info(f" - BOT Login -> {bot.user}")
-    logger.info(f" - Connected to ( {len(bot.guilds)} ) servers!")
+    logger.info(f" - Connected to ( {len(bot.guilds)} ) guilds!")
     logger.info("-" * 50)
     logger.info(f" - Invite bot: {invite.get_link(bot)}")
     logger.info("-" * 50)
