@@ -120,7 +120,7 @@ class userCommand(commands.Cog, name="for @everyone"):
     @commands.command(help="Send random image from cache")
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.check(is_public)
-    async def send(self, ctx, cache_id: str):
+    async def send(self, ctx, cache_id: str = None):
         if cache_id is None:
             content = await img_cache.get_cat_random()
 
