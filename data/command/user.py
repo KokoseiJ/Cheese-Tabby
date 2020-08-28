@@ -120,19 +120,36 @@ class userCommand(commands.Cog, name="for @everyone"):
     @commands.command(help="Send random image from cache")
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.check(is_public)
-    async def send(self, ctx):
-        content = await img_cache.get_cat_random()
+    async def send(self, ctx, cache_id: str):
+        if cache_id is None:
+            content = await img_cache.get_cat_random()
 
-        if content is False:
-            await ctx.send(
-                "```\n"
-                " - Cache is EMPTY!\n"
-                "```"
-            )
-        else:
-            await ctx.send(
-                file=discord.File(
-                    fp=content,
-                    filename=f"{str(uuid.uuid4())}.png"
+            if content is False:
+                await ctx.send(
+                    "```\n"
+                    " - Cache is EMPTY!\n"
+                    "```"
                 )
-            )
+            else:
+                await ctx.send(
+                    file=discord.File(
+                        fp=content,
+                        filename=f"{str(uuid.uuid4())}.png"
+                    )
+                )
+        else:
+            content = await img_cache.get_cat_by_id(cache_id=cache_id)
+
+            if content is False:
+                await ctx.send(
+                    "```\n"
+                    " - Cache Not Found!\n"
+                    "```"
+                )
+            else:
+                await ctx.send(
+                    file=discord.File(
+                        fp=content,
+                        filename=f"{cache_id}.png"
+                    )
+                )
