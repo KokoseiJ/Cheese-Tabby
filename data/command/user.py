@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import io
+import uuid
 import json
 
 import discord
@@ -11,11 +12,15 @@ import option
 
 
 def is_public(ctx):
-    return not isinstance(ctx.message.channel, discord.abc.PrivateChannel)
+    return not isinstance(
+        ctx.message.channel,
+        discord.abc.PrivateChannel
+    )
 
 
 class userCommand(commands.Cog, name="for @everyone"):
     @commands.command(help="Check information about the bot")
+    @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.check(is_public)
     async def me(self, ctx):
         filters = json.load(
@@ -34,6 +39,7 @@ class userCommand(commands.Cog, name="for @everyone"):
         )
 
     @commands.command(help="Send Bot Invite link to you")
+    @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.check(is_public)
     async def invite(self, ctx):
         await ctx.send(
@@ -60,6 +66,7 @@ class userCommand(commands.Cog, name="for @everyone"):
             )
 
     @commands.command(help="Check filter words")
+    @commands.cooldown(1, 50, commands.BucketType.user)
     @commands.check(is_public)
     async def filter(self, ctx):
         filters = json.load(
@@ -99,12 +106,33 @@ class userCommand(commands.Cog, name="for @everyone"):
             pass
 
     @commands.command(help="Check cache information")
+    @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.check(is_public)
     async def cache(self, ctx):
         await ctx.send(
             "```\n"
-            f" - Cached Cat: {len(img_cache.get_cache_list())}\n"
+            f" - Cached Image: {len(img_cache.get_cache_list())}\n"
             f" - Cache Limit: {option.cache_limit}\n"
             f" - Cache Size: {round(img_cache.get_cache_size() / (1024 * 1024), 2)} MB\n"
             "```"
         )
+
+    @commands.command(help="Send random image from cache")
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.check(is_public)
+    async def send(self, ctx):
+        content = await img_cache.get_cat_random()
+
+        if content is False:
+            await ctx.send(
+                "```\n"
+                " - Cache is EMPTY!\n"
+                "```"
+            )
+        else:
+            await ctx.send(
+                file=discord.File(
+                    fp=content,
+                    filename=f"{str(uuid.uuid4())}.png"
+                )
+            )

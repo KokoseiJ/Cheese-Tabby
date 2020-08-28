@@ -16,6 +16,8 @@ def load_filter(file_name):
         cache = cache.replace("\n", ",")
         cache = cache.replace(" ", "").split(",")
         return cache
+    elif file_name.split(".")[-1] == "json":
+        return None
     else:
         logger.warning("Filter file must be [*.txt] file")
         return None

@@ -37,6 +37,11 @@ def create_logger():
 logger = create_logger()
 
 
+def cache_filter():
+    from data.lib import filter
+    filter.get_filter()
+
+
 def set_bot():
     try:
         import option
@@ -49,11 +54,6 @@ def set_bot():
         return commands.AutoShardedBot(command_prefix=option.prefix)
     else:
         return commands.Bot(command_prefix=option.prefix)
-
-
-def cache_filter():
-    from data.lib import filter
-    filter.get_filter()
 
 
 bot = set_bot()
@@ -96,8 +96,8 @@ async def on_command(ctx):
 async def on_command_error(ctx, error):
     if isinstance(error, discord.ext.commands.errors.CommandOnCooldown):
         await ctx.send(f"```\n"
-                       f"{error}\n"
-                       f"``` - <@{ctx.author.id}>")
+                       f" - {error}\n"
+                       f"```<@{ctx.author.id}>")
         return
 
     if isinstance(error, discord.ext.commands.errors.CommandNotFound):

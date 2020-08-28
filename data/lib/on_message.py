@@ -12,21 +12,18 @@ logger = logging.getLogger()
 
 
 async def do_filter(message: discord.message):
-    black_item_list = [
-        "1", "2", "3",
-        "4", "5", "6",
-        "7", "8", "9",
-        "*", "0", "#",
-        " ", ".", ",",
-        "!", "?", "-",
-        "_", "=", "\n",
-    ]
+    def open_it(filename: str):
+        return open(
+            file=filename,
+            mode="r",
+            encoding="utf-8"
+        )
 
     msg_content = message.content
-    for black_item in black_item_list:
-        msg_content = msg_content.replace(black_item, "")
+    for block_item in json.load(open_it(filename="data/filter/block_words.json")):
+        msg_content = msg_content.replace(block_item, "")
 
-    for item in json.load(open("data/cache__filters.json", mode="r", encoding="utf-8")):
+    for item in json.load(open_it(filename="data/cache__filters.json")):
         if item.lower() in msg_content.lower():
             logger.info(f"[{message.author.id}]{message.author} Called the Cat! Used Word: {item} ")
 

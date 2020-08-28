@@ -8,9 +8,17 @@ logger = logging.getLogger()
 
 
 async def check_delete(payload, bot):
-    await bot.fetch_channel(channel_id=payload.channel_id)
-    channel = await bot.fetch_channel(channel_id=payload.channel_id)
-    message = await channel.fetch_message(id=payload.message_id)
+    await bot.fetch_channel(
+        channel_id=payload.channel_id
+    )
+
+    channel = await bot.fetch_channel(
+        channel_id=payload.channel_id
+    )
+
+    message = await channel.fetch_message(
+        id=payload.message_id
+    )
 
     if message.author.id == bot.user.id and payload.user_id != bot.user.id:
         x_emoji = [
