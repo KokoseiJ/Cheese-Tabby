@@ -1,28 +1,17 @@
 # -*- coding: utf-8 -*-
 
-# Test Discord Module
 try:
     import discord
     from discord.ext import commands
 except ModuleNotFoundError:
-    # Try to install
-    import subprocess
+    # Shutdown the bot!
+    import sys
 
-    try:
-        subprocess.run(['pip', 'install', '-r', 'requirements.txt'])
-    except OSError:
-        subprocess.run(['pip3', 'install', '-r', 'requirements.txt'])
+    print("Discord module not installed...")
+    print("Please check the 'requirements.txt' and install it!")
+    print(" - Recommend Command: pip install -r requirements.txt")
 
-    try:
-        import discord
-        from discord.ext import commands
-    except ModuleNotFoundError:
-        import sys
-
-        print("Module installation failed...")
-        print("Please check the 'requirements.txt' and install it!")
-
-        sys.exit(-1)
+    sys.exit(-1)
 
 
 # Need to Before Setting
@@ -38,8 +27,8 @@ logger = create_logger()
 
 
 def cache_filter():
-    from data.lib import filter
-    filter.get_filter()
+    from data.lib import filter_load
+    filter_load.get()
 
 
 def set_bot():

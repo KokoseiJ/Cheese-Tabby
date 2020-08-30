@@ -4,7 +4,7 @@ import logging
 
 from discord.ext import commands
 
-from data.lib import img_cache, filter
+from data.lib import img_cache, filter_load
 
 logger = logging.getLogger()
 
@@ -24,7 +24,7 @@ class ownerCommand(commands.Cog, name="for Bot OWNER"):
             await ctx.send(
                 "```\n"
                 f" - {ctx.bot.user}'s filter information!\n"
-                f" - {len(filter.get_filter())} words\n"
+                f" - {len(filter_load.get_filter())} words\n"
                 "```"
             )
         else:
