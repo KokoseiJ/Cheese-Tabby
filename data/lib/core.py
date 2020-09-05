@@ -85,9 +85,10 @@ async def get_from_cache(msg: str = None):
 
         return None, None, msg
     else:
-        return await img_cache.get_cat_random(
+        cat_img, cat_id = await img_cache.get_cat_random(
             return_with_cat_id=True
-        ), msg
+        )
+        return cat_img, cat_id, msg
 
 
 async def work():
