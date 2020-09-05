@@ -18,6 +18,7 @@ except ModuleNotFoundError:
 def create_logger():
     import logging
     from data.lib import log
+
     log.create_logger()
 
     return logging.getLogger()
@@ -74,7 +75,7 @@ load_command()
 
 # Bot Event Method
 @bot.event
-async def on_command(ctx):
+async def on_command(ctx: commands.context):
     if isinstance(ctx.message.channel, discord.abc.PrivateChannel):
         logger.info(f"[{ctx.author.id}]{ctx.author} use [{ctx.message.content}] command at [PrivateChannel]")
     else:
@@ -82,7 +83,7 @@ async def on_command(ctx):
 
 
 @bot.event
-async def on_command_error(ctx, error):
+async def on_command_error(ctx: commands.context, error):
     if isinstance(error, discord.ext.commands.errors.CommandOnCooldown):
         await ctx.send(f"```\n"
                        f" - {error}\n"
@@ -127,7 +128,7 @@ async def filter_work(message):
 
 
 @bot.listen(name="on_raw_reaction_add")
-async def image_delete(payload):
+async def image_delete(payload: discord.RawReactionActionEvent):
     from data.lib import on_raw_reaction_add
 
     await on_raw_reaction_add.check_delete(
@@ -137,7 +138,7 @@ async def image_delete(payload):
 
 
 # Load Bot Token
-def bot_token(reset=False):
+def bot_token(reset: bool = False):
     from data.lib import token
 
     token_worker = token.Token(

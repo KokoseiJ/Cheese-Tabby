@@ -7,7 +7,7 @@ import discord
 logger = logging.getLogger()
 
 
-async def check_delete(payload, bot):
+async def check_delete(payload: discord.RawReactionActionEvent, bot):
     await bot.fetch_channel(
         channel_id=payload.channel_id
     )

@@ -7,7 +7,7 @@ import logging
 logger = logging.getLogger()
 
 
-def create_file_handler(log_formatter):
+def create_file_handler(log_formatter: logging.Formatter):
     boot_time = time.strftime("%Y-%m-%d %HH %MM", time.localtime(time.time()))
     try:
         file_handler = logging.FileHandler(f"log/{boot_time}.log")
@@ -20,7 +20,7 @@ def create_file_handler(log_formatter):
     return file_handler
 
 
-def create_console_handler(log_formatter):
+def create_console_handler(log_formatter: logging.Formatter):
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(log_formatter)
 
@@ -34,5 +34,13 @@ def create_logger():
     )
 
     logger.setLevel(logging.INFO)
-    logger.addHandler(create_console_handler(log_formatter))
-    logger.addHandler(create_file_handler(log_formatter))
+    logger.addHandler(
+        hdlr=create_console_handler(
+            log_formatter=log_formatter
+        )
+    )
+    logger.addHandler(
+        hdlr=create_file_handler(
+            log_formatter=log_formatter
+        )
+    )

@@ -73,7 +73,7 @@ async def get_cat_random(raw=False):
     return await get_cat_by_id(caches[cat_id])
 
 
-async def get_cat_by_id(cache_id):
+async def get_cat_by_id(cache_id: str):
     try:
         async with aiofiles.open(os.path.join(cache_dir, cache_id), mode='rb') as worker:
             content = await worker.read()
@@ -93,7 +93,7 @@ def purge_cache():
             logger.info(f"Fail to remove '{cache}' cause '{e.__class__.__name__}: {e}'")
 
 
-async def get_hash_by_id(cache_id):
+async def get_hash_by_id(cache_id: str):
     cat = await get_cat_by_id(cache_id)
     if cat is not False:
         return get_hash_by_byte(bytes(cat.getbuffer()))

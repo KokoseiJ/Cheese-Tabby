@@ -7,7 +7,7 @@ import logging
 logger = logging.getLogger()
 
 
-def read_file(file_name):
+def read_file(file_name: str):
     logger.info(f"Loading words from {file_name}")
     if file_name.split(".")[-1] == "txt":
         with open(f"./data/filter/{file_name}", "r", encoding="utf-8") as filter_file:

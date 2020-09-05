@@ -8,7 +8,7 @@ logger = logging.getLogger()
 
 
 class Token:
-    def __init__(self, file_name, service, dig=True):
+    def __init__(self, file_name: str, service: str, dig: bool = True):
         self.name = file_name
         self.service = service
         self.dig = dig
@@ -50,7 +50,7 @@ class Token:
 
         return loaded_token
 
-    def update_token(self, new_token):
+    def update_token(self, new_token: str):
         try:
             logger.info("Updating Token...")
             with open(self.name, "w", encoding="utf8") as f:

@@ -9,7 +9,7 @@ from data.lib import invite
 logger = logging.getLogger()
 
 
-def get_status(option):
+def get_status(option: str):
     if option == "idle":
         return discord.Status.idle
     elif option == "dnd":
@@ -22,7 +22,7 @@ def get_status(option):
         return discord.Status.online
 
 
-def get_type(option):
+def get_type(option: str):
     if option == "playing":
         return discord.ActivityType.playing
     elif option == "streaming":
@@ -35,7 +35,7 @@ def get_type(option):
         return discord.ActivityType.unknown
 
 
-async def set_status(bot, status, activity, name):
+async def set_status(bot, status: str, activity: str, name: str):
     await bot.change_presence(
         status=get_status(status),
         activity=discord.Activity(

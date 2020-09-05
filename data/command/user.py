@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import io
-import uuid
 import json
 
 import discord
@@ -11,18 +10,18 @@ from data.lib import img_cache, invite
 import option
 
 
-def is_public(ctx):
+def is_public(ctx: commands.context):
     return not isinstance(
         ctx.message.channel,
         discord.abc.PrivateChannel
     )
 
 
-class userCommand(commands.Cog, name="for @everyone"):
+class Everyone(commands.Cog, name="for @everyone"):
     @commands.command(help="Check information about the bot")
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.check(is_public)
-    async def me(self, ctx):
+    async def me(self, ctx: commands.context):
         filters = json.load(
             open(
                 "data/cache__filters.json",
@@ -41,7 +40,7 @@ class userCommand(commands.Cog, name="for @everyone"):
     @commands.command(help="Send Bot Invite link to you")
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.check(is_public)
-    async def invite(self, ctx):
+    async def invite(self, ctx: commands.context):
         await ctx.send(
             "```\n"
             " - Check your Private Message!\n"
@@ -68,7 +67,7 @@ class userCommand(commands.Cog, name="for @everyone"):
     @commands.command(help="Check filter words")
     @commands.cooldown(1, 50, commands.BucketType.user)
     @commands.check(is_public)
-    async def filter(self, ctx):
+    async def filter(self, ctx: commands.context):
         filters = json.load(
             open(
                 "data/cache__filters.json",
@@ -108,7 +107,7 @@ class userCommand(commands.Cog, name="for @everyone"):
     @commands.command(help="Check cache information")
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.check(is_public)
-    async def cache(self, ctx):
+    async def cache(self, ctx: commands.context):
         await ctx.send(
             "```\n"
             f" - Cached Image: {len(img_cache.get_cache_list())}\n"
@@ -120,7 +119,7 @@ class userCommand(commands.Cog, name="for @everyone"):
     @commands.command(help="Send random image from cache")
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.check(is_public)
-    async def send(self, ctx, cache_id: str = None):
+    async def send(self, ctx: commands.context, cache_id: str = None):
         if cache_id is None:
             content = await img_cache.get_cat_random()
 
@@ -138,7 +137,9 @@ class userCommand(commands.Cog, name="for @everyone"):
                     )
                 )
         else:
-            content = await img_cache.get_cat_by_id(cache_id=cache_id)
+            content = await img_cache.get_cat_by_id(
+                cache_id=cache_id
+            )
 
             if content is False:
                 await ctx.send(
