@@ -30,7 +30,7 @@ async def private(message: discord.message):
                 return_with_cat_id=True
             )
 
-            if content is False:
+            if content is None:
                 await message.channel.send(
                     "```\n"
                     " - Cache is EMPTY!\n"
