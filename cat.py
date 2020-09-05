@@ -116,15 +116,21 @@ async def on_ready():
 
 
 @bot.listen(name="on_message")
-async def filter_work(message):
+async def filter_work(message: discord.message):
+    from option import prefix
     from data.lib import on_message
 
-    if message.author.bot or isinstance(message.channel, discord.abc.PrivateChannel):
-        return
-
-    await on_message.do_filter(
-        message=message
-    )
+    if not message.content.startswith(prefix):
+        if message.author.bot:
+            return
+        elif isinstance(message.channel, discord.abc.PrivateChannel):
+            await on_message.private(
+                message=message
+            )
+        else:
+            await on_message.public(
+                message=message
+            )
 
 
 @bot.listen(name="on_raw_reaction_add")

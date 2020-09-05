@@ -39,23 +39,23 @@ def get_cache_size():
 
 
 async def save_cat(file):
-    file_name = f"{uuid.uuid4()}"
-    logger.info(f"Try to Save Cat at '{cache_dir}' name as '{file_name}'")
+    cache_id = f"{uuid.uuid4()}"
+    logger.info(f"Try to Save Cat at '{cache_dir}' name as '{cache_id}'")
 
     cache_hash = get_hash_by_byte(file.getbuffer())
     if cache_hash in await get_all_hash():
         logger.info("PASS! Already Cached Image!")
-        return True
+        return None
 
     try:
-        async with aiofiles.open(os.path.join(cache_dir, file_name), mode='wb') as worker:
+        async with aiofiles.open(os.path.join(cache_dir, cache_id), mode='wb') as worker:
             await worker.write(file.getbuffer())
 
-        logging.info(f"Cat Saved! '{os.path.join(cache_dir, file_name)}")
-        return True
+        logging.info(f"Cat Saved! '{os.path.join(cache_dir, cache_id)}")
+        return cache_id
     except Exception as e:
         logger.warning(f"FAIL - {e.__class__.__name__}: {e}")
-        return False
+        return None
 
 
 async def replace_cat(file):
@@ -64,13 +64,22 @@ async def replace_cat(file):
     return await save_cat(file)
 
 
-async def get_cat_random(raw=False):
+async def get_cat_random(raw: bool = False, return_with_cat_id: bool = False):
     caches = get_cache_list()
-    cat_id = random.randint(0, len(caches) - 1)
+    try:
+        cat_id = random.randint(0, len(caches) - 1)
+    except ValueError:
+        if return_with_cat_id is True:
+            return None, None
+        return None
 
     if raw is True:
         return caches[cat_id]
-    return await get_cat_by_id(caches[cat_id])
+    else:
+        if return_with_cat_id is True:
+            return await get_cat_by_id(caches[cat_id]), cat_id
+        else:
+            return await get_cat_by_id(caches[cat_id])
 
 
 async def get_cat_by_id(cache_id: str):

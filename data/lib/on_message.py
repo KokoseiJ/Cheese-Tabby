@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
 
-import uuid
 import json
 import logging
 
 import discord
 
-from data.lib import core
+from data.lib import core, img_cache
 
 logger = logging.getLogger()
 
 
-async def do_filter(message: discord.message):
+async def private(message: discord.message):
     def open_it(filename: str):
         return open(
             file=filename,
@@ -27,36 +26,69 @@ async def do_filter(message: discord.message):
         if item.lower() in msg_content.lower():
             logger.info(f"[{message.author.id}]{message.author} Called the Cat! Used Word: {item} ")
 
-            ct = await core.get()
-            used_cache, content = ct[0], ct[1]
-            del ct
+            content, cat_id = await img_cache.get_cat_random(
+                return_with_cat_id=True
+            )
 
-            if isinstance(content, str):
+            if content is False:
                 await message.channel.send(
-                    content=content
+                    "```\n"
+                    " - Cache is EMPTY!\n"
+                    "```"
+                )
+            else:
+                await message.channel.send(
+                    file=discord.File(
+                        fp=content,
+                        filename=f"{cat_id}.png"
+                    )
+                )
+
+            return
+
+
+async def public(message: discord.message):
+    def open_it(filename: str):
+        return open(
+            file=filename,
+            mode="r",
+            encoding="utf-8"
+        )
+
+    msg_content = message.content
+    for block_item in json.load(open_it(filename="data/filter/block_words.json")):
+        msg_content = msg_content.replace(block_item, "")
+
+    for item in json.load(open_it(filename="data/cache__filters.json")):
+        if item.lower() in msg_content.lower():
+            logger.info(f"[{message.author.id}]{message.author} Called the Cat! Used Word: {item} ")
+
+            cat_img, cat_id, msg = await core.work()
+
+            if cat_img is None:
+                await message.channel.send(
+                    content=msg
                 )
             else:
                 try:
-                    cat_img = await message.channel.send(
+                    try_send_cat = await message.channel.send(
                         file=discord.File(
-                            fp=content,
-                            filename=f"{str(uuid.uuid4())}.png"
+                            fp=cat_img,
+                            filename=f"{cat_id}.png"
                         )
                     )
                 except discord.errors.Forbidden:
                     await message.channel.send(
-                        "```\nHello?\n"
+                        "```\n"
+                        "Hello?\n"
                         f"This bot need [Attach Files] and [Add Reactions] Permission!!\n"
-                        f"```\n <@{message.guild.owner_id}>"
+                        f"``` <@{message.guild.owner_id}>"
                     )
                     return
 
                 if len(msg_content.replace(item.lower(), "")) != 0:
                     try:
-                        if used_cache is True:
-                            await cat_img.add_reaction("❌")
-                        else:
-                            await cat_img.add_reaction("🇽")
+                        await try_send_cat.add_reaction("❌")
                     except discord.errors.Forbidden:
                         logger.warning("Fail to add emoji...")
 

@@ -121,7 +121,9 @@ class Everyone(commands.Cog, name="for @everyone"):
     @commands.check(is_public)
     async def send(self, ctx: commands.context, cache_id: str = None):
         if cache_id is None:
-            content = await img_cache.get_cat_random()
+            content, cat_id = await img_cache.get_cat_random(
+                return_with_cat_id=True
+            )
 
             if content is False:
                 await ctx.send(
@@ -133,7 +135,7 @@ class Everyone(commands.Cog, name="for @everyone"):
                 await ctx.send(
                     file=discord.File(
                         fp=content,
-                        filename=f"{str(uuid.uuid4())}.png"
+                        filename=f"{cat_id}.png"
                     )
                 )
         else:
