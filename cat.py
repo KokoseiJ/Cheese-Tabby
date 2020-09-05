@@ -102,13 +102,13 @@ async def on_command_error(ctx: commands.context, error):
 @bot.event
 async def on_ready():
     from data.lib import start_page
-    from option import presence
+    from option import Presence
 
     await start_page.set_status(
         bot=bot,
-        status=presence.status,
-        activity=presence.activity,
-        name=presence.name
+        status=Presence.status,
+        activity=Presence.activity,
+        name=Presence.name
     )
     start_page.bot_info(
         bot=bot

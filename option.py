@@ -16,7 +16,7 @@ use_Auto_shard = True
 
 
 # Bot Presence
-class presence:
+class Presence:
     # [online / idle / dnd]
     status = "idle"
 
