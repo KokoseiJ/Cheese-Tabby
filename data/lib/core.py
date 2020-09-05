@@ -47,7 +47,7 @@ async def get_from_api():
                 msg="Header Said: This is not Image!!"
             )
 
-        cache_id = "idk.png"
+        cache_id = "idk"
         if option.cache_limit > len(img_cache.get_cache_list()):
             logger.info("Adding Cat to 'cat_cache'...")
 
