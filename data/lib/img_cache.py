@@ -19,7 +19,7 @@ def get_cache_list():
     return os.listdir(cache_dir)
 
 
-def get_size_by_id(cache_id):
+def get_size_by_id(cache_id: str):
     return os.path.getsize(os.path.join(cache_dir, cache_id))
 
 
@@ -30,7 +30,7 @@ def get_cache_size():
     logger.info(f"Try to get size in '{cache_dir}'")
     for item in items:
         try:
-            result = result + get_size_by_id(item)
+            result = result + get_size_by_id(cache_id=item)
         except Exception as e:
             logger.warning(f"FAIL - {e.__class__.__name__}: {e}")
 
@@ -61,7 +61,7 @@ async def save_cat(file):
 async def replace_cat(file):
     old_cat = await get_cat_random(raw=True)
     os.remove(os.path.join(cache_dir, old_cat))
-    return await save_cat(file)
+    return await save_cat(file=file)
 
 
 async def get_cat_random(raw: bool = False, return_with_cat_id: bool = False):
@@ -77,9 +77,9 @@ async def get_cat_random(raw: bool = False, return_with_cat_id: bool = False):
         return caches[cat_id]
     else:
         if return_with_cat_id is True:
-            return await get_cat_by_id(caches[cat_id]), cat_id
+            return await get_cat_by_id(cache_id=caches[cat_id]), caches[cat_id]
         else:
-            return await get_cat_by_id(caches[cat_id])
+            return await get_cat_by_id(cache_id=caches[cat_id])
 
 
 async def get_cat_by_id(cache_id: str):
@@ -103,9 +103,9 @@ def purge_cache():
 
 
 async def get_hash_by_id(cache_id: str):
-    cat = await get_cat_by_id(cache_id)
+    cat = await get_cat_by_id(cache_id=cache_id)
     if cat is not False:
-        return get_hash_by_byte(bytes(cat.getbuffer()))
+        return get_hash_by_byte(byte_data=bytes(cat.getbuffer()))
     else:
         return None
 
