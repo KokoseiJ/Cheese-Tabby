@@ -42,11 +42,6 @@ async def save_cat(file):
     cache_id = f"{uuid.uuid4()}"
     logger.info(f"Try to Save Cat at '{cache_dir}' name as '{cache_id}'")
 
-    cache_hash = get_hash_by_byte(file.getbuffer())
-    if cache_hash in await get_all_hash():
-        logger.info("PASS! Already Cached Image!")
-        return None
-
     try:
         async with aiofiles.open(os.path.join(cache_dir, cache_id), mode='wb') as worker:
             await worker.write(file.getbuffer())
@@ -112,19 +107,6 @@ async def get_hash_by_id(cache_id: str):
 
 def get_hash_by_byte(byte_data: bytes):
     return hashlib.md5(byte_data).hexdigest()
-
-
-async def get_all_hash():
-    logger.info("Getting ALL Hash data...")
-    result = []
-    for cache_id in get_cache_list():
-        t = await get_hash_by_id(cache_id)
-        if t is None:
-            logger.info("Wrong Cache")
-        else:
-            result.append(t)
-
-    return result
 
 
 async def purge_same():
