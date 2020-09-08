@@ -5,9 +5,6 @@ import json
 import discord
 from discord.ext import commands
 
-from data.lib import filter_load, img_cache, invite
-import option
-
 
 def is_public(ctx: commands.context):
     return not isinstance(
@@ -38,6 +35,8 @@ class Everyone(commands.Cog, name="for @everyone"):
     @commands.command(help="Send Bot Invite link to you")
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def invite(self, ctx: commands.context):
+        from data.lib import invite
+
         if is_public(ctx=ctx):
             await ctx.send(
                 "```\n"
@@ -67,6 +66,8 @@ class Everyone(commands.Cog, name="for @everyone"):
     @commands.check(is_public)
     async def filter(self, ctx: commands.context):
         if await ctx.bot.is_owner(user=ctx.author):
+            from data.lib import filter_load
+
             filter_load.get()
 
         filters = json.load(
@@ -87,10 +88,13 @@ class Everyone(commands.Cog, name="for @everyone"):
     @commands.command(help="Check cache information")
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def cache(self, ctx: commands.context):
+        from data.lib import img_cache
+        from option import cache_limit
+
         await ctx.send(
             "```\n"
             f" - Cached Image: {len(img_cache.get_cache_list())}\n"
-            f" - Cache Limit: {option.cache_limit}\n"
+            f" - Cache Limit: {cache_limit}\n"
             f" - Cache Size: {round(img_cache.get_cache_size() / (1000 * 1000), 2)} MB\n"
             "```"
         )
@@ -99,6 +103,8 @@ class Everyone(commands.Cog, name="for @everyone"):
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.check(is_public)
     async def send(self, ctx: commands.context, cache_id: str = None):
+        from data.lib import img_cache
+
         if cache_id is None:
             content, cat_id = await img_cache.get_cat_random(
                 return_with_cat_id=True
