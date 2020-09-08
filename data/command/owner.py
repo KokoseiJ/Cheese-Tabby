@@ -4,7 +4,7 @@ import logging
 
 from discord.ext import commands
 
-from data.lib import img_cache, filter_load
+from data.lib import img_cache
 
 logger = logging.getLogger()
 
@@ -20,9 +20,9 @@ class Owner(commands.Cog, name="for Bot OWNER"):
             logger.warning(f"[{ctx.author.id}]{ctx.author} try to use owner command")
             await ctx.send("?")
 
-    @commands.command(help="Delete the same cached image")
+    @commands.command(help="Delete duplicate images from the cache folder")
     @commands.is_owner()
-    async def purge(self, ctx: commands.context):
+    async def clear(self, ctx: commands.context):
         if await ctx.bot.is_owner(user=ctx.author):
             before = len(img_cache.get_cache_list())
             await img_cache.purge_same()
@@ -37,9 +37,9 @@ class Owner(commands.Cog, name="for Bot OWNER"):
             logger.warning(f"[{ctx.author.id}]{ctx.author} try to use owner command")
             await ctx.send("?")
 
-    @commands.command(help="Delete all cached images")
+    @commands.command(help="Delete all images in the cache folder")
     @commands.is_owner()
-    async def clean(self, ctx: commands.context):
+    async def clear_cache(self, ctx: commands.context):
         if await ctx.bot.is_owner(user=ctx.author):
             logger.info("Removing cached image from cache directory...")
 
