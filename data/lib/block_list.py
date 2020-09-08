@@ -10,7 +10,7 @@ logger = logging.getLogger()
 def read_file(file_name: str):
     logger.info(f"Loading words from {file_name}")
     if file_name.split(".")[-1] == "json":
-        return json.load(open(f"./data/filter/{file_name}", "r", encoding="utf-8"))
+        return json.load(open(f"./data/block_words/{file_name}", "r", encoding="utf-8"))
     else:
         logger.warning("Filter file must be [*.txt] file")
         return None
