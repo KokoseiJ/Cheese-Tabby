@@ -35,6 +35,7 @@ def get():
     logger.info("--------<< Filter Information >>--------")
     logger.info(f" - {len(filters)} words")
     logger.info(f" - Use the 'filter' command to get more information!")
+    logger.info("----------------------------------------")
 
     json.dump(
         obj=filters,

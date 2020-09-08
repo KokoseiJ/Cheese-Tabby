@@ -27,8 +27,9 @@ def get():
             for tmp in cache:
                 block_list.append(tmp)
 
-    logger.info("--------<< Block Words Information >>--------")
+    logger.info("--------<< Block Words Information >>---")
     logger.info(f" - {len(block_list)} words")
+    logger.info("----------------------------------------")
 
     json.dump(
         obj=block_list,
