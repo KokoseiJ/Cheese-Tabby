@@ -28,7 +28,9 @@ logger = create_logger()
 
 
 def cache_filter():
-    from data.lib import filter_load
+    from data.lib import block_list, filter_load
+
+    block_list.get()
     filter_load.get()
 
 

@@ -66,8 +66,9 @@ class Everyone(commands.Cog, name="for @everyone"):
     @commands.check(is_public)
     async def filter(self, ctx: commands.context):
         if await ctx.bot.is_owner(user=ctx.author):
-            from data.lib import filter_load
+            from data.lib import block_list, filter_load
 
+            block_list.get()
             filter_load.get()
 
         filters = json.load(

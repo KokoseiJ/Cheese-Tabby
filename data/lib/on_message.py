@@ -19,7 +19,7 @@ async def private(message: discord.message):
         )
 
     msg_content = message.content
-    for block_item in json.load(open_it(filename="data/filter/block_words.json")):
+    for block_item in json.load(open_it(filename="data/filter/cache__block_words.json")):
         msg_content = msg_content.replace(block_item, "")
 
     for item in json.load(open_it(filename="data/cache__filters.json")):
@@ -56,7 +56,7 @@ async def public(message: discord.message):
         )
 
     msg_content = message.content
-    for block_item in json.load(open_it(filename="data/filter/block_words.json")):
+    for block_item in json.load(open_it(filename="data/cache__block_words.json")):
         msg_content = msg_content.replace(block_item, "")
 
     for item in json.load(open_it(filename="data/cache__filters.json")):
