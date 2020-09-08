@@ -27,6 +27,19 @@ def create_logger():
 logger = create_logger()
 
 
+def check_cache_dir():
+    import os
+
+    from option import cache_dir
+
+    logger.info(f"Testing '{cache_dir}' is online...")
+    if os.path.isdir(os.path.join(cache_dir)):
+        logger.info(f"'{cache_dir}' is online!")
+    else:
+        os.mkdir(cache_dir)
+        logger.info(f"'{cache_dir}' is now online!")
+
+
 def cache_filter():
     from data.lib import block_list, filter_load
 
@@ -49,7 +62,7 @@ def set_bot():
 
 
 bot = set_bot()
-cache_filter()
+check_cache_dir(), cache_filter()
 
 
 # Import Command Modules

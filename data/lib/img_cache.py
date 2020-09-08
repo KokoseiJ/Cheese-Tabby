@@ -15,7 +15,6 @@ logger = logging.getLogger()
 
 
 def get_cache_list():
-    check_dir()
     return os.listdir(cache_dir)
 
 
@@ -120,12 +119,3 @@ async def purge_same():
         else:
             os.remove(os.path.join(cache_dir, i))
             logger.info(f"Duplicate cache '{i}' deleted")
-
-
-def check_dir():
-    logger.info(f"Testing '{cache_dir}' is online...")
-    if os.path.isdir(os.path.join(cache_dir)):
-        logger.info(f"'{cache_dir}' is online!")
-    else:
-        os.mkdir(cache_dir)
-        logger.info(f"'{cache_dir}' is now online!")
