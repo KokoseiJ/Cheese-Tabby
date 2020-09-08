@@ -84,7 +84,8 @@ async def on_command(ctx: commands.context):
 
 @bot.event
 async def on_command_error(ctx: commands.context, error):
-    if isinstance(error, discord.ext.commands.errors.CommandOnCooldown):
+    error_name = error.__class__.__name__
+    if error_name in ["CommandOnCooldown", "NotOwner"]:
         await ctx.send(f"```\n"
                        f" - {error}\n"
                        f"```<@{ctx.author.id}>")

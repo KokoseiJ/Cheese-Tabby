@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import io
 import json
 
 import discord
 from discord.ext import commands
 
-from data.lib import img_cache, invite
+from data.lib import filter_load, img_cache, invite
 import option
 
 
@@ -20,7 +19,6 @@ def is_public(ctx: commands.context):
 class Everyone(commands.Cog, name="for @everyone"):
     @commands.command(help="Check information about the bot")
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.check(is_public)
     async def me(self, ctx: commands.context):
         filters = json.load(
             open(
@@ -39,17 +37,17 @@ class Everyone(commands.Cog, name="for @everyone"):
 
     @commands.command(help="Send Bot Invite link to you")
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.check(is_public)
     async def invite(self, ctx: commands.context):
-        await ctx.send(
-            "```\n"
-            " - Check your Private Message!\n"
-            "```"
-        )
+        if is_public(ctx=ctx):
+            await ctx.send(
+                "```\n"
+                " - Check your Private Message!\n"
+                "```"
+            )
 
         embed = discord.Embed(
             title="Invite Me!",
-            color=16579836,
+            color=0xFF933A,
             description="Please Click me!",
             url=invite.get_link(ctx.bot)
         )
@@ -68,6 +66,9 @@ class Everyone(commands.Cog, name="for @everyone"):
     @commands.cooldown(1, 50, commands.BucketType.user)
     @commands.check(is_public)
     async def filter(self, ctx: commands.context):
+        if await ctx.bot.is_owner(user=ctx.author):
+            filter_load.get()
+
         filters = json.load(
             open(
                 "data/cache__filters.json",
@@ -78,35 +79,13 @@ class Everyone(commands.Cog, name="for @everyone"):
 
         await ctx.send(
             "```\n"
-            " - Check your Private Message!\n"
+            f" - {ctx.bot.user}'s filter information!\n"
+            f" - {len(filters)} words\n"
             "```"
         )
 
-        try:
-            await ctx.author.send(
-                "```\n"
-                f" - {ctx.bot.user}'s filter information!\n"
-                f" - {len(filters)} words\n"
-                "```"
-            )
-
-            result = ""
-            for f in filters:
-                result += f"- {f}\n"
-
-            result = io.BytesIO(result.encode("utf-8"))
-            await ctx.author.send(
-                file=discord.File(
-                    fp=result,
-                    filename="filter.txt"
-                )
-            )
-        except discord.errors.Forbidden:
-            pass
-
     @commands.command(help="Check cache information")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.check(is_public)
     async def cache(self, ctx: commands.context):
         await ctx.send(
             "```\n"

@@ -11,26 +11,17 @@ logger = logging.getLogger()
 
 class Owner(commands.Cog, name="for Bot OWNER"):
     @commands.command(help="Shutdown the bot")
+    @commands.is_owner()
     async def close(self, ctx: commands.context):
         if await ctx.bot.is_owner(user=ctx.author):
             await ctx.send(":wave:")
             await ctx.bot.close()
         else:
             logger.warning(f"[{ctx.author.id}]{ctx.author} try to use owner command")
-
-    @commands.command(help="Reload the Filter Words")
-    async def reload(self, ctx: commands.context):
-        if await ctx.bot.is_owner(user=ctx.author):
-            await ctx.send(
-                "```\n"
-                f" - {ctx.bot.user}'s filter information!\n"
-                f" - {len(filter_load.get())} words\n"
-                "```"
-            )
-        else:
-            logger.warning(f"[{ctx.author.id}]{ctx.author} try to use owner command")
+            await ctx.send("?")
 
     @commands.command(help="Delete the same cached image")
+    @commands.is_owner()
     async def purge(self, ctx: commands.context):
         if await ctx.bot.is_owner(user=ctx.author):
             before = len(img_cache.get_cache_list())
@@ -44,9 +35,11 @@ class Owner(commands.Cog, name="for Bot OWNER"):
             )
         else:
             logger.warning(f"[{ctx.author.id}]{ctx.author} try to use owner command")
+            await ctx.send("?")
 
     @commands.command(help="Delete all cached images")
-    async def purge_all(self, ctx: commands.context):
+    @commands.is_owner()
+    async def clean(self, ctx: commands.context):
         if await ctx.bot.is_owner(user=ctx.author):
             logger.info("Removing cached image from cache directory...")
 
@@ -69,3 +62,4 @@ class Owner(commands.Cog, name="for Bot OWNER"):
                 )
         else:
             logger.warning(f"[{ctx.author.id}]{ctx.author} try to use owner command")
+            await ctx.send("?")
