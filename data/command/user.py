@@ -63,7 +63,6 @@ class Everyone(commands.Cog, name="for @everyone"):
 
     @commands.command(help="Check filter words")
     @commands.cooldown(1, 50, commands.BucketType.user)
-    @commands.check(is_public)
     async def filter(self, ctx: commands.context):
         if await ctx.bot.is_owner(user=ctx.author):
             from data.lib import block_list, filter_load
