@@ -5,7 +5,7 @@ import logging
 
 import discord
 
-from data.lib import core, img_cache
+from data.lib import core
 
 logger = logging.getLogger()
 

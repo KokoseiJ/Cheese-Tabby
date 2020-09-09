@@ -137,9 +137,7 @@ async def filter_work(message: discord.message):
     from data.lib import on_message
 
     if not message.content.startswith(prefix):
-        if message.author.bot:
-            return
-        elif isinstance(message.channel, discord.abc.PrivateChannel):
+        if message.author.bot or isinstance(message.channel, discord.abc.PrivateChannel):
             return
         else:
             await on_message.public(
