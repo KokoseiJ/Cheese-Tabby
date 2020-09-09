@@ -22,6 +22,13 @@ def read_file(file_name: str):
 
 
 def get():
+    logger.info("Testing filter folder is online...")
+    if os.path.isdir(os.path.join("data", "filter")):
+        logger.info("filter folder is online!")
+    else:
+        os.mkdir(os.path.join("data", "filter"))
+        logger.info("filter folder is now online!")
+
     logger.info("Searching filter...")
     items = os.listdir("./data/filter/")
 
