@@ -19,6 +19,13 @@ def read_file(file_name: str):
 
 
 def get():
+    logger.info("Testing 'block_words' is online...")
+    if os.path.isdir(os.path.join("data", "block_words")):
+        logger.info("'block_words' is online!")
+    else:
+        os.mkdir(os.path.join("data", "block_words"))
+        logger.info("'block_words' is now online!")
+
     logger.info("Searching Block words...")
     items = os.listdir("./data/block_words/")
 
