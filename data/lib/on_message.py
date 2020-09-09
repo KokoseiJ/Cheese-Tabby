@@ -10,43 +10,6 @@ from data.lib import core, img_cache
 logger = logging.getLogger()
 
 
-async def private(message: discord.message):
-    def open_it(filename: str):
-        return open(
-            file=filename,
-            mode="r",
-            encoding="utf-8"
-        )
-
-    msg_content = message.content
-    for block_item in json.load(open_it(filename="data/cache__block_words.json")):
-        msg_content = msg_content.replace(block_item, "")
-
-    for item in json.load(open_it(filename="data/cache__filters.json")):
-        if item.lower() in msg_content.lower():
-            logger.info(f"[{message.author.id}]{message.author} Called the Cat! Used Word: {item} ")
-
-            content, cat_id = await img_cache.get_cat_random(
-                return_with_cat_id=True
-            )
-
-            if content is None:
-                await message.channel.send(
-                    "```\n"
-                    " - Cache is EMPTY!\n"
-                    "```"
-                )
-            else:
-                await message.channel.send(
-                    file=discord.File(
-                        fp=content,
-                        filename=f"{cat_id}.png"
-                    )
-                )
-
-            return
-
-
 async def public(message: discord.message):
     def open_it(filename: str):
         return open(

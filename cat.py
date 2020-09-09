@@ -140,9 +140,7 @@ async def filter_work(message: discord.message):
         if message.author.bot:
             return
         elif isinstance(message.channel, discord.abc.PrivateChannel):
-            await on_message.private(
-                message=message
-            )
+            return
         else:
             await on_message.public(
                 message=message
