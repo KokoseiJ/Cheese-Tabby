@@ -19,7 +19,7 @@ def read_file(file_name: str):
 
 
 def get():
-    logger.info("Searching filter...")
+    logger.info("Searching Block words...")
     items = os.listdir("./data/block_words/")
 
     block_list = list()
