@@ -23,7 +23,7 @@ class Presence:
     # [playing / streaming / listening / watching]
     activity = "watching"
 
-    name = "Cat"
+    name = "night view"
 
 
 # Offline Mode
