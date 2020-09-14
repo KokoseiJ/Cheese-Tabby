@@ -65,7 +65,7 @@ async def get_from_api():
         cache_id = img_cache.get_hash_by_byte(
             byte_data=bytes(api_image.getbuffer())
         )
-        return api_image, cache_id, "over here!"
+        return api_image, cache_id, "from api"
     elif api_status == -1:
         return await get_from_cache(
             msg="Fail to Connect to API Server..."

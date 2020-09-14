@@ -55,8 +55,9 @@ async def public(message: discord.message):
                         f"``` <@{message.guild.owner_id}>"
                     )
 
-                await core.save_cache(
-                    image=image
-                )
+                if msg == "from api":
+                    await core.save_cache(
+                        image=image
+                    )
 
             return
