@@ -65,9 +65,9 @@ class Everyone(commands.Cog, name="for @everyone"):
     @commands.cooldown(1, 50, commands.BucketType.user)
     async def filter(self, ctx: commands.context):
         if await ctx.bot.is_owner(user=ctx.author):
-            from data.lib import block_list, filter_load
+            from data.lib import remove_list, filter_load
 
-            block_list.get()
+            remove_list.get()
             filter_load.get()
 
         filters = json.load(
@@ -105,8 +105,8 @@ class Everyone(commands.Cog, name="for @everyone"):
         from data.lib import img_cache
 
         if cache_id is None:
-            content, cat_id = await img_cache.get_cat_random(
-                return_with_cat_id=True
+            content, cat_id = await img_cache.get_img_random(
+                return_with_cache_id=True
             )
 
             if content is False:
@@ -123,7 +123,7 @@ class Everyone(commands.Cog, name="for @everyone"):
                     )
                 )
         else:
-            content = await img_cache.get_cat_by_id(
+            content = await img_cache.get_image_by_id(
                 cache_id=cache_id
             )
 

@@ -12,8 +12,7 @@
 3. run the bot
     - ex) cat.py or python3 cat.py
 4. invite the bot
-
-1. say "Meow" or find cat!
+5. say "Meow" or find cat!
 
 _ _ _ _ _
 ### Filter Creation Help
@@ -32,7 +31,7 @@ _ _ _ _ _
    ```
    - result: ["cat", "meow", "miaow"]
 
-3. Add "," between words to finish.
+3. Add "," between words to finish!
 
 _ _ _ _ _
 ### 필터 작성 도움말
@@ -51,4 +50,4 @@ _ _ _ _ _
    ```
    - 결과: ["고양이", "야옹", "애옹"]
 
-3. ","를 단어 사이에 추가하면 끝
+3. ","를 단어 사이에 추가하면 끝!

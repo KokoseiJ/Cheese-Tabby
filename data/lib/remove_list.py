@@ -12,22 +12,22 @@ logger = logging.getLogger()
 def read_file(file_name: str):
     logger.info(f"Loading words from {file_name}")
     if file_name.split(".")[-1] == "json":
-        return json.load(open(f"./data/block_words/{file_name}", "r", encoding="utf-8"))
+        return json.load(open(f"./data/remove_words/{file_name}", "r", encoding="utf-8"))
     else:
         logger.warning("Filter file must be [*.txt] file")
         return None
 
 
 def get():
-    logger.info("Testing 'block_words' is online...")
-    if os.path.isdir(os.path.join("data", "block_words")):
-        logger.info("'block_words' is online!")
+    logger.info("Testing 'remove_words' is online...")
+    if os.path.isdir(os.path.join("data", "remove_words")):
+        logger.info("'remove_words' is online!")
     else:
-        os.mkdir(os.path.join("data", "block_words"))
-        logger.info("'block_words' is now online!")
+        os.mkdir(os.path.join("data", "remove_words"))
+        logger.info("'remove_words' is now online!")
 
     logger.info("Searching Block words...")
-    items = os.listdir("./data/block_words/")
+    items = os.listdir("./data/remove_words/")
 
     block_list = list()
     for item in items:

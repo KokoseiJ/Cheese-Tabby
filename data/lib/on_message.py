@@ -10,6 +10,13 @@ from data.lib import core
 logger = logging.getLogger()
 
 
+async def add_emoji(message: discord.message):
+    try:
+        await message.add_reaction("❌")
+    except discord.errors.Forbidden:
+        logger.warning("Fail to add emoji...")
+
+
 async def public(message: discord.message):
     def open_it(filename: str):
         return open(
@@ -26,18 +33,18 @@ async def public(message: discord.message):
         if item.lower() in msg_content.lower():
             logger.info(f"[{message.author.id}]{message.author} Called the Cat! Used Word: {item} ")
 
-            cat_img, cat_id, msg = await core.work()
+            image, cache_id, msg = await core.work()
 
-            if cat_img is None:
+            if image is None:
                 await message.channel.send(
                     content=msg
                 )
             else:
                 try:
-                    try_send_cat = await message.channel.send(
+                    await message.channel.send(
                         file=discord.File(
-                            fp=cat_img,
-                            filename=f"{cat_id}.png"
+                            fp=image,
+                            filename=f"{cache_id}.png"
                         )
                     )
                 except discord.errors.Forbidden:
@@ -47,12 +54,9 @@ async def public(message: discord.message):
                         f"This bot need [Attach Files] and [Add Reactions] Permission!!\n"
                         f"``` <@{message.guild.owner_id}>"
                     )
-                    return
 
-                if len(msg_content.replace(item.lower(), "")) != 0:
-                    try:
-                        await try_send_cat.add_reaction("❌")
-                    except discord.errors.Forbidden:
-                        logger.warning("Fail to add emoji...")
+                await core.save_cache(
+                    image=image
+                )
 
             return

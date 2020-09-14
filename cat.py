@@ -41,10 +41,10 @@ def check_cache_dir():
 
 
 def cache_filter():
-    from data.lib import block_list, filter_load
+    from data.lib import filter_load, remove_list
 
-    block_list.get()
     filter_load.get()
+    remove_list.get()
 
 
 def set_bot():
@@ -137,7 +137,14 @@ async def filter_work(message: discord.message):
     from data.lib import on_message
 
     if not message.content.startswith(prefix):
-        if message.author.bot or isinstance(message.channel, discord.abc.PrivateChannel):
+        if message.author.bot:
+            if message.author.id is bot.user.id:
+                await on_message.add_emoji(
+                    message=message
+                )
+
+            return
+        if isinstance(message.channel, discord.abc.PrivateChannel):
             return
         else:
             await on_message.public(

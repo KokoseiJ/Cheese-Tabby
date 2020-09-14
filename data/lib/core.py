@@ -11,6 +11,21 @@ from data.lib import img_cache
 logger = logging.getLogger()
 
 
+async def save_cache(image: bytes):
+    if option.cache_limit > len(img_cache.get_cache_list()):
+        logger.info("Adding Cat to 'cat_cache'...")
+
+        await img_cache.save_img(image)
+    else:
+        logger.info("Cache is full!")
+
+        if option.replace_on_limit is True:
+            logger.info("Replace option is enabled!")
+            logger.info("Adding Cat to 'cat_cache'...")
+            await img_cache.replace_img(image)
+        pass
+
+
 async def get_from_api():
     async def get():
         try:
@@ -39,31 +54,18 @@ async def get_from_api():
             logger.info(f"Detail-> {e.__class__.__name__}: {e}")
             return -1, None
 
-    api_status, cat_image = await get()
+    api_status, api_image = await get()
 
     if api_status == 200:
-        if cat_image is None:
+        if api_image is None:
             return get_from_cache(
                 msg="Header Said: This is not Image!!"
             )
 
-        cache_id = "idk"
-        if option.cache_limit > len(img_cache.get_cache_list()):
-            logger.info("Adding Cat to 'cat_cache'...")
-
-            tmp = await img_cache.save_cat(cat_image)
-            if tmp is not None:
-                cache_id = tmp
-        else:
-            logger.info("Cache is full!")
-
-            if option.replace_on_limit is True:
-                logger.info("Replace option is enabled!")
-                logger.info("Adding Cat to 'cat_cache'...")
-                await img_cache.replace_cat(cat_image)
-            pass
-
-        return cat_image, cache_id, "Cat is here!"
+        cache_id = img_cache.get_hash_by_byte(
+            byte_data=bytes(api_image.getbuffer())
+        )
+        return api_image, cache_id, "over here!"
     elif api_status == -1:
         return await get_from_cache(
             msg="Fail to Connect to API Server..."
@@ -85,10 +87,10 @@ async def get_from_cache(msg: str = None):
 
         return None, None, msg
     else:
-        cat_img, cat_id = await img_cache.get_cat_random(
-            return_with_cat_id=True
+        image, cache_id = await img_cache.get_img_random(
+            return_with_cache_id=True
         )
-        return cat_img, cat_id, msg
+        return image, cache_id, msg
 
 
 async def work():

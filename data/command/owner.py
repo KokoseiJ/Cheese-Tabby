@@ -16,38 +16,23 @@ class Owner(commands.Cog, name="for Bot OWNER"):
         await ctx.send(":wave: :cat:")
         await ctx.bot.close()
 
-    @commands.command(help="Delete duplicate images from the cache folder")
-    @commands.is_owner()
-    async def clear(self, ctx: commands.context):
-        before = len(img_cache.get_cache_list())
-        await img_cache.purge_same()
-        after = len(img_cache.get_cache_list())
-
-        await ctx.send(
-            "```\n"
-            f" - {before - after} Deleted!"
-            "```"
-        )
-
     @commands.command(help="Delete all images in the cache folder")
     @commands.is_owner()
     async def clear_cache(self, ctx: commands.context):
         logger.info("Removing cached image from cache directory...")
 
-        cc = len(img_cache.get_cache_list())
-        logger.info(f"'{cc}' detected")
-
-        if cc == 0:
+        if len(img_cache.get_cache_list()) == 0:
             logger.info("cache directory is already empty")
             await ctx.send(
                 "```\n"
                 " - Already empty!"
                 "```"
             )
+            logger.warning("Already empty!")
         else:
             img_cache.purge_cache()
             await ctx.send(
                 "```\n"
-                f" - {cc} Deleted!"
+                " - Deleted!"
                 "```"
             )
