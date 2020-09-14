@@ -14,7 +14,7 @@ def read_file(file_name: str):
     if file_name.split(".")[-1] == "json":
         return json.load(open(f"./data/remove_words/{file_name}", "r", encoding="utf-8"))
     else:
-        logger.warning("Filter file must be [*.txt] file")
+        logger.warning("Filter file must be [*.json] file")
         return None
 
 
@@ -26,7 +26,7 @@ def get():
         os.mkdir(os.path.join("data", "remove_words"))
         logger.info("'remove_words' is now online!")
 
-    logger.info("Searching Block words...")
+    logger.info("Searching filters...")
     items = os.listdir("./data/remove_words/")
 
     block_list = list()
@@ -36,26 +36,26 @@ def get():
             for tmp in cache:
                 block_list.append(tmp)
 
-    logger.info("Add Number to block words...")
+    logger.info("Add Number to remove words...")
     for d in digits:
         block_list.append(d)
 
-    logger.info("Add Punctuation to block words...")
+    logger.info("Add Punctuation to remove words...")
     for p in punctuation:
         block_list.append(p)
 
-    logger.info("Add Whitespace to block words...")
+    logger.info("Add Whitespace to remove words...")
     for w in whitespace:
         block_list.append(w)
 
-    logger.info("--------<< Block Words Information >>---")
+    logger.info("--------<< Remove words Information >>---")
     logger.info(f" - {len(block_list)} words")
-    logger.info("----------------------------------------")
+    logger.info("-----------------------------------------")
 
     json.dump(
         obj=block_list,
         fp=open(
-            "data/cache__block_words.json",
+            "data/cache__remove_words.json",
             mode="w",
             encoding="utf-8"
         )
