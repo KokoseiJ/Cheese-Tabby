@@ -22,11 +22,11 @@ async def check_delete(payload: discord.RawReactionActionEvent, bot):
 
     if message.author.id == bot.user.id and payload.user_id != bot.user.id:
         x_emoji = [
-            "🇽", "❌"
+            "🇽", "❌", "❎", "✖️"
         ]
 
         if payload.emoji.name in x_emoji:
-            logger.info(f"Emoji added! Removing Message...")
+            logger.info(f"Emoji detected! Removing Message...")
 
             try:
                 await message.delete()
