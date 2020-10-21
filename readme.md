@@ -1,18 +1,10 @@
-# Cat
+# Cheese Tabby
 
-- Discord Bot!
-- Meow? Meow!
-- public bot [invite](https://discord.com/api/oauth2/authorize?client_id=730797542065045504&permissions=35904&scope=bot)
-    - prefix: ==
+## Watch ths Cat in the discord
 
-# Run Guide
-
-1. Create the bot
-2. Get the bot token
-3. run the bot
-    - ex) cat.py or python3 cat.py
-4. invite the bot
-5. say "Meow" or find cat!
+### Invite
+- [top.gg](https://top.gg/bot/730797542065045504)
+- [Discord Invite](https://discord.com/api/oauth2/authorize?client_id=730797542065045504&permissions=35904&scope=bot)
 
 _ _ _ _ _
 ### Filter Creation Help
