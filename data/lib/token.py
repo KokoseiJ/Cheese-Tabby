@@ -2,16 +2,14 @@
 
 import json
 import logging
-import getpass
 
 logger = logging.getLogger()
 
 
 class Token:
-    def __init__(self, file_name: str, service: str, dig: bool = True):
+    def __init__(self, file_name: str, service: str):
         self.name = file_name
         self.service = service
-        self.dig = dig
 
     def get_token(self):
         logger.info("Loading Token...")
@@ -29,24 +27,6 @@ class Token:
         except FileNotFoundError:
             logger.critical("Token File Not Found")
             loaded_token = "#"
-
-            if self.dig is False:
-                self.reset_token()
-
-        if self.dig is True:
-            if loaded_token == "#":
-                logger.info("READY - Get Token from console input")
-                bot_token = getpass.getpass(f"What is **Your** '{self.service}' Token: ")
-                logger.info("Token length check...")
-                if len(loaded_token) == 59:
-                    logger.info("OK! - Token is Ready!")
-                    self.update_token(bot_token)
-                else:
-                    logger.critical("FAIL - Invalid token detected")
-                    loaded_token = "#"
-        else:
-            if loaded_token == "#":
-                return None
 
         return loaded_token
 
